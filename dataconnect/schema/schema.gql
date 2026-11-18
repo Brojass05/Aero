@@ -1,0 +1,25 @@
+type Alergia @table(name: "alergias", key: ["idalergia"]) {
+  idalergia: Int! @col(name: "idalergia")
+  nombrealergia: String! @col(name: "nombrealergia", dataType: "varchar(45)")
+}
+
+type TipoEntorno @table(name: "tipoentorno", key: ["idtipoentorno"]) {
+  idtipoentorno: Int! @col(name: "idtipoentorno")
+  descripcion: String! @col(name: "descripcion", dataType: "varchar(45)")
+}
+
+type Usuario @table(name: "usuarios", key: ["userid"]) {
+  userid: String! @col(name: "userid", dataType: "varchar(45)")
+  nombre: String! @col(name: "nombre", dataType: "varchar(45)")
+  apellido: String! @col(name: "apellido", dataType: "varchar(45)")
+  tienealergia: Boolean! @col(name: "tienealergia")
+  correo: String! @col(name: "correo", dataType: "text")
+
+  # Campos de clave foránea renombrados a camelCase para cumplir con los requisitos de FDC
+  fkIdAlergia: Int @col(name: "fk_idalergia")
+  fkIdTipoCiudad: Int @col(name: "fk_idtipoentorno")
+
+  # Relaciones tipadas
+  alergia: Alergia @ref(fields: "fkIdAlergia", references: "idalergia")
+  tipoEntorno: TipoEntorno @ref(fields: "fkIdTipoCiudad", references: "idtipoentorno")
+}

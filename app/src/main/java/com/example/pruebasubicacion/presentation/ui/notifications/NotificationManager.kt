@@ -10,7 +10,7 @@ import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.pruebasubicacion.data.UserPreferences
+import com.example.pruebasubicacion.data.repository.UserPreferences
 import com.example.pruebasubicacion.MainActivity
 import com.example.pruebasubicacion.util.ChequeadorBackground
 val TAG = "NotificationManager"

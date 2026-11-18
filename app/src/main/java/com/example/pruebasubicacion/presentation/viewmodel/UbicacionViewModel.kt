@@ -1,34 +1,33 @@
 package com.example.pruebasubicacion.presentation.viewmodel
 
+
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.pruebasubicacion.data.ClimaRepository
-import com.example.pruebasubicacion.data.UserPreferences
-import com.example.pruebasubicacion.data.dataStore
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.pruebasubicacion.data.model.ClimaEstado
-
+import com.example.pruebasubicacion.data.repository.ClimaRepository
+import com.example.pruebasubicacion.data.repository.UserPreferences
+import com.example.pruebasubicacion.data.repository.dataStore
 import com.example.pruebasubicacion.util.Log
-
 import kotlinx.coroutines.launch
 
 
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
+class UbicacionViewModel(private val userPreferences: UserPreferences) : ViewModel() {
 
 
-class UbicacionViewModel(private val userPreferences: UserPreferences): ViewModel() {
-
-    
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val context = this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as android.content.Context
-                val userPreferences = UserPreferences((context as android.app.Application).applicationContext.dataStore)
+                val context =
+                    this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as android.content.Context
+                val userPreferences =
+                    UserPreferences((context as Application).applicationContext.dataStore)
                 UbicacionViewModel(userPreferences)
             }
         }
@@ -61,6 +60,7 @@ class UbicacionViewModel(private val userPreferences: UserPreferences): ViewMode
             }
         }
     }
+
     fun saveLastPm(value: Float) {
         viewModelScope.launch {
             userPreferences.saveLastPm(value)

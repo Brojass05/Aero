@@ -1,4 +1,4 @@
-package com.example.pruebasubicacion.data
+package com.example.pruebasubicacion.data.repository
 
 import com.example.pruebasubicacion.data.model.ClimaModel
 import com.example.pruebasubicacion.data.model.NominatimServicioAPI
@@ -32,7 +32,8 @@ class ClimaRepository {
 
             ClimaData(
                 clima = combinedClima,
-                nombreUbicacion = locationData.address?.getNombreUbicacion() ?: "Ubicación desconocida",
+                nombreUbicacion = locationData.address?.getNombreUbicacion()
+                    ?: "Ubicación desconocida",
                 pm25 = airData.hourly.pm25?.firstOrNull() ?: 0f
             )
         }

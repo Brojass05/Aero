@@ -1,0 +1,313 @@
+extend type Alergia {
+  """
+  ✨ List `Usuario` objects in a one-to-many relationship (where `Usuario`.`alergia` is this object).
+  """
+  usuarios_on_alergia(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Usuario_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Usuario_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Usuario_Having
+  ): [Usuario!]! @fdc_generated(from: "Usuario.alergia", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Alergia", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Alergia` table.
+  """
+  _count: Int! @fdc_generated(from: "Alergia.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Alergia` table where the `idalergia` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  idalergia_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Alergia.idalergia", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Alergia` table where the `nombrealergia` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  nombrealergia_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Alergia.nombrealergia", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `idalergia` field in the `Alergia` table.
+  """
+  idalergia_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "Alergia.idalergia", purpose: QUERY_SUM)
+  """
+  ✨ Average the `idalergia` field in the `Alergia` table.
+  """
+  idalergia_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Alergia.idalergia", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `idalergia` field in the `Alergia` table.
+  """
+  idalergia_min: Int @fdc_generated(from: "Alergia.idalergia", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `idalergia` field in the `Alergia` table.
+  """
+  idalergia_max: Int @fdc_generated(from: "Alergia.idalergia", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "Alergia.idalergia", purpose: ENTITY_ID)
+}
+extend type TipoEntorno {
+  """
+  ✨ List `Usuario` objects in a one-to-many relationship (where `Usuario`.`tipoEntorno` is this object).
+  """
+  usuarios_on_tipoEntorno(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Usuario_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Usuario_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Usuario_Having
+  ): [Usuario!]! @fdc_generated(from: "Usuario.tipoEntorno", purpose: QUERY_MULTIPLE_ONE_TO_MANY)
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "TipoEntorno", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `TipoEntorno` table.
+  """
+  _count: Int! @fdc_generated(from: "TipoEntorno.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TipoEntorno` table where the `descripcion` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  descripcion_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TipoEntorno.descripcion", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `TipoEntorno` table where the `idtipoentorno` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  idtipoentorno_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "TipoEntorno.idtipoentorno", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `idtipoentorno` field in the `TipoEntorno` table.
+  """
+  idtipoentorno_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "TipoEntorno.idtipoentorno", purpose: QUERY_SUM)
+  """
+  ✨ Average the `idtipoentorno` field in the `TipoEntorno` table.
+  """
+  idtipoentorno_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "TipoEntorno.idtipoentorno", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `idtipoentorno` field in the `TipoEntorno` table.
+  """
+  idtipoentorno_min: Int @fdc_generated(from: "TipoEntorno.idtipoentorno", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `idtipoentorno` field in the `TipoEntorno` table.
+  """
+  idtipoentorno_max: Int @fdc_generated(from: "TipoEntorno.idtipoentorno", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "TipoEntorno.idtipoentorno", purpose: ENTITY_ID)
+}
+extend type Usuario {
+  """
+  Implicit metadata field that cannot be written. It provides extra information about query results.
+  """
+  _metadata: _Metadata @fdc_generated(from: "Usuario", purpose: METADATA_FIELD)
+  """
+  ✨ Count the number of rows in the `Usuario` table.
+  """
+  _count: Int! @fdc_generated(from: "Usuario.", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Usuario` table where the `apellido` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  apellido_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Usuario.apellido", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Usuario` table where the `correo` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  correo_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Usuario.correo", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Usuario` table where the `fkIdAlergia` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  fkIdAlergia_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Usuario.fkIdAlergia", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Usuario` table where the `fkIdTipoCiudad` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  fkIdTipoCiudad_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Usuario.fkIdTipoCiudad", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Usuario` table where the `nombre` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  nombre_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Usuario.nombre", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Usuario` table where the `tienealergia` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  tienealergia_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Usuario.tienealergia", purpose: QUERY_COUNT)
+  """
+  ✨ Count the number of rows in the `Usuario` table where the `userid` field is non-null. Pass the `distinct` argument to instead count the number of distinct values.
+  """
+  userid_count(
+    """
+    Set to true to count the number of distinct values.
+    """
+    distinct: Boolean = false
+  ): Int! @fdc_generated(from: "Usuario.userid", purpose: QUERY_COUNT)
+  """
+  ✨ Sum the `fkIdAlergia` field in the `Usuario` table.
+  """
+  fkIdAlergia_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "Usuario.fkIdAlergia", purpose: QUERY_SUM)
+  """
+  ✨ Sum the `fkIdTipoCiudad` field in the `Usuario` table.
+  """
+  fkIdTipoCiudad_sum(
+    """
+    Set to true to sum the distinct values.
+    """
+    distinct: Boolean = false
+  ): Int @fdc_generated(from: "Usuario.fkIdTipoCiudad", purpose: QUERY_SUM)
+  """
+  ✨ Average the `fkIdAlergia` field in the `Usuario` table.
+  """
+  fkIdAlergia_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Usuario.fkIdAlergia", purpose: QUERY_AVG)
+  """
+  ✨ Average the `fkIdTipoCiudad` field in the `Usuario` table.
+  """
+  fkIdTipoCiudad_avg(
+    """
+    Set to true to average the distinct values.
+    """
+    distinct: Boolean = false
+  ): Float @fdc_generated(from: "Usuario.fkIdTipoCiudad", purpose: QUERY_AVG)
+  """
+  ✨ Minimum of the `fkIdAlergia` field in the `Usuario` table.
+  """
+  fkIdAlergia_min: Int @fdc_generated(from: "Usuario.fkIdAlergia", purpose: QUERY_MIN)
+  """
+  ✨ Minimum of the `fkIdTipoCiudad` field in the `Usuario` table.
+  """
+  fkIdTipoCiudad_min: Int @fdc_generated(from: "Usuario.fkIdTipoCiudad", purpose: QUERY_MIN)
+  """
+  ✨ Maximum of the `fkIdAlergia` field in the `Usuario` table.
+  """
+  fkIdAlergia_max: Int @fdc_generated(from: "Usuario.fkIdAlergia", purpose: QUERY_MAX)
+  """
+  ✨ Maximum of the `fkIdTipoCiudad` field in the `Usuario` table.
+  """
+  fkIdTipoCiudad_max: Int @fdc_generated(from: "Usuario.fkIdTipoCiudad", purpose: QUERY_MAX)
+  """
+  A generated field that is used for caching results in SDKs.
+  """
+  _id: ID! @fdc_generated(from: "Usuario.userid", purpose: ENTITY_ID)
+}

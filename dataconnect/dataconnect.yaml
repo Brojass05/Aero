@@ -1,0 +1,13 @@
+specVersion: "v1"
+serviceId: "pruebasbbdd-db511-service"
+location: "southamerica-west1"
+schemas:
+  - source: "./schema"
+    datasource:
+      postgresql:
+        database: "EcoAlertDB2"
+        cloudSql:
+          instanceId: "pruebasbbdd-db511-instance"
+          # schemaValidation: "STRICT"
+          # schemaValidation: "COMPATIBLE"
+connectorDirs: ["./example"]

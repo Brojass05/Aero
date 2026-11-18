@@ -1,0 +1,59 @@
+# Consultas GraphQL para Data Connect (AeroTrack)
+
+query GetUsuarios @auth(level: PUBLIC) {
+  usuarios {
+    userid
+    nombre
+    apellido
+    tienealergia
+    correo
+    fkIdAlergia
+    fkIdTipoCiudad
+  }
+}
+
+query GetAlergias @auth(level: PUBLIC) {
+  alergias {
+    idalergia
+    nombrealergia
+  }
+}
+
+query GetTipoEntornos @auth(level: PUBLIC) {
+  tipoEntornos {
+    idtipoentorno
+    descripcion
+  }
+}
+
+query GetUsuarioById($userid: String!) @auth(level: PUBLIC) {
+  usuario(key: { userid: $userid }) {
+    userid
+    nombre
+    apellido
+    tienealergia
+    correo
+
+    # Resuelve automáticamente la FK fkIdAlergia trayendo la entidad relacionada
+    alergia {
+      nombrealergia
+    }
+
+    # Resuelve automáticamente la FK fkIdTipoCiudad trayendo la entidad relacionada
+    tipoEntorno {
+      descripcion
+    }
+  }
+}
+
+query GetFullUsuarioById($userid: String!) @auth(level: PUBLIC) {
+  usuario(key: { userid: $userid }) {
+    userid
+    nombre
+    apellido
+    tienealergia
+    correo
+    fkIdAlergia
+    fkIdTipoCiudad
+  }
+}

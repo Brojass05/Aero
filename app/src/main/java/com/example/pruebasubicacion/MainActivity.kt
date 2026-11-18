@@ -43,8 +43,8 @@ import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 
 import androidx.lifecycle.lifecycleScope
-import com.example.pruebasubicacion.data.UserPreferences
-import com.example.pruebasubicacion.data.dataStore
+import com.example.pruebasubicacion.data.repository.UserPreferences
+import com.example.pruebasubicacion.data.repository.dataStore
 
 import kotlinx.coroutines.launch
 

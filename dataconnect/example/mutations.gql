@@ -1,0 +1,27 @@
+# Mutaciones GraphQL para Data Connect (AeroTrack)
+
+mutation UpsertUsuario(
+  $userid: String!
+  $nombre: String!
+  $apellido: String!
+  $tienealergia: Boolean!
+  $correo: String!
+  $fkIdAlergia: Int
+  $fkIdTipoCiudad: Int
+) @auth(level: PUBLIC) {
+  usuario_upsert(
+    data: {
+      userid: $userid
+      nombre: $nombre
+      apellido: $apellido
+      tienealergia: $tienealergia
+      correo: $correo
+      fkIdAlergia: $fkIdAlergia
+      fkIdTipoCiudad: $fkIdTipoCiudad
+    }
+  )
+}
+
+mutation DeleteUsuario($userid: String!) @auth(level: PUBLIC) {
+  usuario_delete(key: { userid: $userid })
+}
