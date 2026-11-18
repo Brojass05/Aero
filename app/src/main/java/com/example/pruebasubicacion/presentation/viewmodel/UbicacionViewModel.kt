@@ -18,8 +18,9 @@ import com.example.pruebasubicacion.util.Log
 import kotlinx.coroutines.launch
 
 
-class UbicacionViewModel(private val userPreferences: UserPreferences) : ViewModel() {
-
+class UbicacionViewModel(
+    private val userPreferences: UserPreferences
+) : ViewModel() {
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

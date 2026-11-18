@@ -13,7 +13,6 @@
 package com.google.firebase.dataconnect.generated
 
 import com.google.firebase.dataconnect.getInstance as _fdcGetInstance
-import kotlin.time.Duration.Companion.milliseconds as _milliseconds
 
 public interface ExampleConnector : com.google.firebase.dataconnect.generated.GeneratedConnector<ExampleConnector> {
   override val dataConnect: com.google.firebase.dataconnect.FirebaseDataConnect

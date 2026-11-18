@@ -5,9 +5,9 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.pruebasubicacion.data.repository.ClimaRepository
-import com.example.pruebasubicacion.presentation.ui.notifications.showSimpleNotificationOpenActivity
 import com.example.pruebasubicacion.data.repository.UserPreferences
 import com.example.pruebasubicacion.data.repository.dataStore
+import com.example.pruebasubicacion.presentation.ui.notifications.showSimpleNotificationOpenActivity
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource

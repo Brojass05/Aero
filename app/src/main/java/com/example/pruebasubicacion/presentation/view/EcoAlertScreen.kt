@@ -1,6 +1,8 @@
 package com.example.pruebasubicacion.presentation.view
 
 
+
+import android.app.Dialog
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -67,18 +69,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 // ---- Imports Propios ----
+
 import com.example.pruebasubicacion.data.model.ClimaEstado
 import com.example.pruebasubicacion.presentation.ui.misc.TopDashboardBar
 import com.example.pruebasubicacion.util.GenerateReportButton
 import com.example.pruebasubicacion.util.HeroAQIArcMeter
 import com.example.pruebasubicacion.util.LocationCardAdaptive
 import com.example.pruebasubicacion.util.WeeklyForecast
-import com.example.pruebasubicacion.util.creaInforme
 import com.example.pruebasubicacion.util.colors.getAdaptiveThemeColors
 import com.example.pruebasubicacion.util.colors.getRiskInfoAdaptive
+import com.example.pruebasubicacion.util.creaInforme
 import com.example.pruebasubicacion.util.sumarHorasUtc
 // ---- Imports Propios ----
+
 import java.time.LocalDateTime
 
 // --- Modelo de Datos de Perfil de Usuario ---
@@ -126,20 +131,20 @@ fun EcoAlertScreen(
     var selectedTab by remember { mutableIntStateOf(0) } // 0 = Deportista, 1 = Sensible/Asma
     var showNotifications by remember { mutableStateOf(false) }
     var showProfile by remember { mutableStateOf(false) }
+    var showReportCard by remember { mutableStateOf(false) }
 
     // Estado de Usuario (Perfil y Login)
     var userProfile by remember { mutableStateOf(UserProfileData()) }
     var activeMetricInfo by remember { mutableStateOf<Triple<String, String, ImageVector>?>(null) }
 
-    val reportAction = {
+    val reportAction: () -> Unit = {
         if (!userProfile.isLoggedIn) {
             showProfile = true
+            showReportCard = false
         } else {
-            activeMetricInfo = Triple(
-                "Reporte Próximo Día Generado",
-                "¡Excelente! El reporte predictivo de calidad de aire para el próximo día ha sido generado y sincronizado con tu perfil (${userProfile.nombre} ${userProfile.apellido}).",
-                Icons.Outlined.Assessment
-            )
+            showReportCard = true
+            showProfile = false
+            showNotifications = false
         }
     }
 
@@ -312,6 +317,18 @@ fun EcoAlertScreen(
                             }
                         }
                     }
+                }
+            }
+
+            if (showReportCard) {
+                Dialog(
+                    onDismissRequest = { showReportCard = false }
+                ) {
+                    ReporteAmbientalCard(
+                        theme = theme,
+                        climaEstado = estado,
+                        onClose = { showReportCard = false }
+                    )
                 }
             }
 
