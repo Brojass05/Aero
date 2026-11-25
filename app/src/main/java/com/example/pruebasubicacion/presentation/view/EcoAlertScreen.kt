@@ -94,6 +94,7 @@ data class UserProfileData(
     val correo: String = "juan.perez@aerotrack.com",
     val peso: String = "75 kg",
     val sexo: String = "Masculino",
+    val tieneAlergia: Boolean = false,
     val alergias: String = "Polen de Gramíneas",
     val tipoCiudad: String = "Ciudad Valle Central (Santiago, Rancagua, Talca)"
 )
@@ -327,6 +328,8 @@ fun EcoAlertScreen(
                     ReporteAmbientalCard(
                         theme = theme,
                         climaEstado = estado,
+                        tieneAlergia = userProfile.tieneAlergia,
+                        alergiaUsuario = userProfile.alergias,
                         onClose = { showReportCard = false }
                     )
                 }

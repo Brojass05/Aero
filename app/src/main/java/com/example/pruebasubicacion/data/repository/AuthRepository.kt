@@ -83,6 +83,7 @@ data class AuthUiState(
     val isLoggedIn: Boolean = false,
     val nombre: String = "",
     val apellido: String = "",
+    val tieneAlergia: Boolean = false,
     val alergia: String = "",
     val tipoCiudad: String = "",
     val listaAlergias: List<String> = listOf("Polvo de Aliso", "Polen de Abedul", "Polen de pasto", "Polen de Artemisa", "Polen de Olivo", "Polen de Ambrosia", "Sin Alergias / Ninguna"),

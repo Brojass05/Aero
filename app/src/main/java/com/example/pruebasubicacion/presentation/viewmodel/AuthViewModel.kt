@@ -108,6 +108,7 @@ class AuthViewModel(
                         uiState = uiState.copy(
                             nombre = usuario.nombre,
                             apellido = usuario.apellido,
+                            tieneAlergia = usuario.tieneAlergia,
                             alergia = usuario.alergia ?: "Ninguna",
                             tipoCiudad = usuario.tipoEntorno ?: "Urbana"
                         )

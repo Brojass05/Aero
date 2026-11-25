@@ -29,6 +29,7 @@ import com.example.pruebasubicacion.presentation.view.ThemeColors
 import com.example.pruebasubicacion.util.colors.getRiskInfoAdaptive
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
 fun WeeklyForecast(estado: ClimaEstado, theme: ThemeColors, isDark: Boolean) {
@@ -89,8 +90,8 @@ fun WeeklyForecast(estado: ClimaEstado, theme: ThemeColors, isDark: Boolean) {
                     DateTimeFormatter.ISO_DATE_TIME
                 )
                 val label = if (i == 0) "Hoy" else date.format(
-                    DateTimeFormatter.ofPattern("EEE")
-                )
+                    DateTimeFormatter.ofPattern("EEE", Locale.forLanguageTag("es"))
+                ).replace(".", "").replaceFirstChar { it.uppercase() }
                 val risk = getRiskInfoAdaptive(avgPm, isDark)
 
                 Surface(

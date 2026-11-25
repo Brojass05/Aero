@@ -72,6 +72,7 @@ fun ProfileAccountView(
     val perfilActualizado = userProfile.copy(
         nombre = viewModel.uiState.nombre.ifBlank { userProfile.nombre },
         apellido = viewModel.uiState.apellido.ifBlank { userProfile.apellido },
+        tieneAlergia = viewModel.uiState.tieneAlergia,
         alergias = viewModel.uiState.alergia.ifBlank { userProfile.alergias },
         tipoCiudad = viewModel.uiState.tipoCiudad.ifBlank { userProfile.tipoCiudad }
     )
@@ -99,6 +100,7 @@ fun ProfileAccountView(
                         nombre = viewModel.uiState.nombre.ifBlank { "Usuario" },
                         apellido = viewModel.uiState.apellido.ifBlank { "" },
                         correo = viewModel.uiState.email.ifBlank { userProfile.correo },
+                        tieneAlergia = viewModel.uiState.tieneAlergia,
                         alergias = viewModel.uiState.alergia.ifBlank { "Ninguna" },
                         tipoCiudad = viewModel.uiState.tipoCiudad.ifBlank { "Urbana" }
                     )

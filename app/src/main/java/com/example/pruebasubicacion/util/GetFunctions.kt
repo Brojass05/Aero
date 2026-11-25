@@ -33,6 +33,7 @@ data class UsuarioPerfil(
     val userid: String,
     val nombre: String,
     val apellido: String,
+    val tieneAlergia: Boolean,
     val alergia: String?,
     val tipoEntorno: String?
 )
@@ -49,7 +50,8 @@ suspend fun fetchUsarioPorId(uid: String): UsuarioPerfil? {
                 userid = usuario.userid,
                 nombre = usuario.nombre,
                 apellido = usuario.apellido,
-                alergia = usuario.alergia?.nombrealergia ?: "Ninguna",
+                tieneAlergia = usuario.tienealergia,
+                alergia = if (usuario.tienealergia) (usuario.alergia?.nombrealergia ?: "Ninguna") else "Ninguna",
                 tipoEntorno = usuario.tipoEntorno?.descripcion ?: "Urbana"
             )
         } else {
@@ -72,7 +74,11 @@ suspend fun fetchFullUsarioPorId(uid: String): UsuarioPerfil? {
             val listaAlergias = listOf("Polvo de Aliso", "Polen de Abedul", "Polen de pasto", "Polen de Artemisa", "Polen de Olivo", "Polen de Ambrosia", "Sin Alergias / Ninguna")
             val listaEntornos = listOf("Zona Rural / Campo", "Zona Semiurbana / Pueblo", "Ciudad Media (Baja polución)", "Gran Ciudad / Metrópoli (Alta polución)", "Zona Industrial / Polución crítica")
 
-            val alergiaStr = usuario.fkIdAlergia?.let { id -> listaAlergias.getOrNull(id - 1) } ?: "Ninguna"
+            val alergiaStr = if (usuario.tienealergia) {
+                usuario.fkIdAlergia?.let { id -> listaAlergias.getOrNull(id - 1) } ?: "Ninguna"
+            } else {
+                "Ninguna"
+            }
             val entornoStr = usuario.fkIdTipoCiudad?.let { id -> listaEntornos.getOrNull(id - 1) } ?: "Urbana"
 
             android.util.Log.d("FetchUsuario", "FullUsuario: ${usuario.nombre}, fkAlergia: ${usuario.fkIdAlergia}, fkEntorno: ${usuario.fkIdTipoCiudad}")
@@ -80,6 +86,7 @@ suspend fun fetchFullUsarioPorId(uid: String): UsuarioPerfil? {
                 userid = usuario.userid,
                 nombre = usuario.nombre,
                 apellido = usuario.apellido,
+                tieneAlergia = usuario.tienealergia,
                 alergia = alergiaStr,
                 tipoEntorno = entornoStr
             )

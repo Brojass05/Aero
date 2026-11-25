@@ -19,7 +19,13 @@ interface ServicioAPI {
                 "sulphur_dioxide," +
                 "carbon_monoxide," +
                 "carbon_dioxide," +
-                "uv_index"
+                "uv_index," +
+                "alder_pollen," +
+                "birch_pollen," +
+                "grass_pollen," +
+                "mugwort_pollen," +
+                "olive_pollen," +
+                "ragweed_pollen"
     ): ClimaModel
 
     companion object {
