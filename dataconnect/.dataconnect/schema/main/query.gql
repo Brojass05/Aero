@@ -1,0 +1,146 @@
+extend type Query {
+  """
+  ✨ Look up a single `Alergia` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  alergia(
+    """
+    The key used to identify the object.
+    """
+    key: Alergia_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Alergia_FirstRow
+  ): Alergia @fdc_generated(from: "Alergia", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `TipoEntorno` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  tipoEntorno(
+    """
+    The key used to identify the object.
+    """
+    key: TipoEntorno_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: TipoEntorno_FirstRow
+  ): TipoEntorno @fdc_generated(from: "TipoEntorno", purpose: QUERY_SINGLE)
+  """
+  ✨ Look up a single `Usuario` based on `id`, `key` or `first` and return selected fields (or `null` if not found).
+  """
+  usuario(
+    """
+    The key used to identify the object.
+    """
+    key: Usuario_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Usuario_FirstRow
+  ): Usuario @fdc_generated(from: "Usuario", purpose: QUERY_SINGLE)
+  """
+  ✨ List `Alergia` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  alergias(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Alergia_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Alergia_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Alergia_Having
+  ): [Alergia!]! @fdc_generated(from: "Alergia", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `TipoEntorno` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  tipoEntornos(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: TipoEntorno_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [TipoEntorno_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: TipoEntorno_Having
+  ): [TipoEntorno!]! @fdc_generated(from: "TipoEntorno", purpose: QUERY_MULTIPLE)
+  """
+  ✨ List `Usuario` objects in the table and return selected fields, optionally filtered by `where` conditions
+  """
+  usuarios(
+    """
+    Filter condition to narrow down the query results.
+    """
+    where: Usuario_Filter
+
+    """
+    Order the query results by specific fields.
+    """
+    orderBy: [Usuario_Order!]
+
+    """
+    Number of rows to skip before starting to return the results.
+    """
+    offset: Int
+
+    """
+    Maximum number of rows to return (defaults to 100 rows).
+    """
+    limit: Int = 100
+
+    """
+    Set to true to return distinct results.
+    """
+    distinct: Boolean = false
+
+    """
+    Filter condition to apply to the groups of aggregate queries.
+    """
+    having: Usuario_Having
+  ): [Usuario!]! @fdc_generated(from: "Usuario", purpose: QUERY_MULTIPLE)
+}

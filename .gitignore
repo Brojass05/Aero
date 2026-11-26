@@ -1,15 +1,51 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Built application files
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Java and Kotlin class files
+*.class
+
+# Log files and crash dumps
+*.log
+dataconnect-debug.log
+pglite-debug.log
+
+# Android Studio / Gradle / Build cache
+.gradle/
+build/
+*/build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local configuration and environment secrets (API Keys, SDK paths)
 local.properties
+.env
+.env.*
+!.env.example
+
+# Android Keystores & Signing Keys (CRITICAL)
+*.jks
+*.keystore
+*.key
+*.p12
+*.pem
+*.pk8
+
+# Firebase and Google Services credentials & cache
+google-services.json
+app/google-services.json
+.firebase/
+.dataconnect/pgliteData/
+
+# IDE files
+*.iml
+.idea/
+!.idea/codeStyles/
+!.idea/runConfigurations/
+
+# OS generated files
+.DS_Store
+Thumbs.db
