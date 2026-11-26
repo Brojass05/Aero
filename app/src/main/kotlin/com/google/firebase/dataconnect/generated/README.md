@@ -86,16 +86,13 @@ a total of 7 operations.
 Each of these operations is exposed
 as a property of [ExampleConnector].
 
-
 An example of the property for a query
 is the query named "GetAlergias",
 which can be accessed via the [ExampleConnector.getAlergias] property.
 
-
 An example of the property for a mutation
 is the mutation named "DeleteUsuario",
 which can be accessed via the [ExampleConnector.deleteUsuario] property.
-
 
 ### ExampleConnector - The `dataConnect` Property
 
@@ -104,8 +101,7 @@ provides access to the underlying
 [com.google.firebase.dataconnect.FirebaseDataConnect] instance.
 Although basic applications will likely not need to access this property,
 it is provided for advanced use cases,
-such as connecting to the Data Connect emulator
-(instead of the Data Connect production servers)
+such as connecting to the Data Connect emulator (instead of the Data Connect production servers)
 and "closing" the
 [com.google.firebase.dataconnect.FirebaseDataConnect] instance
 
@@ -161,11 +157,10 @@ of the corresponding property of [ExampleConnector].
 Most queries require "variables",
 arguments to the query that affect its result.
 Query variables are either "optional" or "required",
-based on the "non-nullable" marker indicated in the GraphQL source file.
-_Required_ variables are specified as arguments to the `execute()` method.
-_Optional_ variables are specified in a Kotlin DSL block as the
+based on the "non-nullable" marker indicated in the GraphQL source file. _Required_ variables are
+specified as arguments to the `execute()` method. _Optional_ variables are specified in a Kotlin DSL
+block as the
 last argument of the `execute()` method.
-
 
 ### Executing Queries with No Variables
 
@@ -183,7 +178,6 @@ val queryResult = connector.getAlergias.execute()
 println("GetAlergias query returned: ${queryResult.data}")
 ```
 
-
 ### Executing Queries with Required Variables
 
 If a query has _required_ variables then they must be specified as
@@ -199,9 +193,6 @@ val queryResult = connector.getFullUsuarioById.execute(userid="baz")
 println("GetFullUsuarioById query returned: ${queryResult.data}")
 ```
 
-
-
-
 ## Executing Mutations
 
 Executing a mutation is as simple as calling the `execute()` method
@@ -209,19 +200,18 @@ of the corresponding property of [ExampleConnector].
 Most mutations require "variables",
 arguments to the mutation that affect its result.
 Mutation variables are either "optional" or "required",
-based on the "non-nullable" marker indicated in the GraphQL source file.
-_Required_ variables are specified as arguments to the `execute()` method.
-_Optional_ variables are specified in a Kotlin DSL block as the
+based on the "non-nullable" marker indicated in the GraphQL source file. _Required_ variables are
+specified as arguments to the `execute()` method. _Optional_ variables are specified in a Kotlin DSL
+block as the
 last argument of the `execute()` method.
-
-
 
 ### Executing Mutations with Required Variables
 
 If a mutation has _required_ variables then they must be specified as
 arguments to the `execute()` method.
 
-For example, the "UpsertUsuario" mutation has 5 required variables ("userid", "nombre", "apellido", "tienealergia", and "correo")
+For example, the "UpsertUsuario" mutation has 5 required variables ("userid", "nombre", "apellido",
+"tienealergia", and "correo")
 and can be executed via the [ExampleConnector.upsertUsuario]
 property as follows:
 
@@ -231,7 +221,6 @@ val mutationResult = connector.upsertUsuario.execute(userid="baz", nombre="corge
 println("UpsertUsuario mutation returned: ${mutationResult.data}")
 ```
 
-
 ### Executing Mutations with Optional Variables
 
 If a mutation has _optional_ variables then, by definition,
@@ -240,7 +229,8 @@ however, if they _are_ specified,
 then they are specified in a Kotlin DSL block as the last argument
 of the `execute()` method.
 
-For example, the "UpsertUsuario" mutation has 2 optional variables ("fkIdAlergia" and "fkIdTipoCiudad")
+For example, the "UpsertUsuario" mutation has 2 optional variables ("fkIdAlergia" and
+"fkIdTipoCiudad")
 and can be executed via the [ExampleConnector.upsertUsuario]
 property as follows:
 

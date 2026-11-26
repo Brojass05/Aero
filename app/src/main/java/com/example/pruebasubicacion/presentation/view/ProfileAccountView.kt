@@ -1,5 +1,4 @@
 package com.example.pruebasubicacion.presentation.view
-// TODO Obtener nombre apellido alergia y entorno al iniciar sesion
 
 
 import androidx.compose.foundation.BorderStroke
@@ -31,6 +30,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
@@ -112,14 +113,16 @@ fun ProfileAccountView(
             viewModel.register(
                 nombre,
                 apellido,
-                tieneAlergia,
                 fkIdAlergia,
                 fkIdTipoCiudad,
                 onSuccess
             )
         },
         onLoginSuccess = onLoginSuccess,
-        onLogout = onLogout,
+        onLogout = {
+            viewModel.logout()
+            onLogout()
+        },
         onClose = onClose
     )
 }
@@ -199,7 +202,11 @@ fun ProfileAccountView(
                     }
                 }
                 IconButton(onClick = onClose) {
-                    Icon(Icons.Default.Close, contentDescription = "Cerrar", tint = theme.textPrimary)
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "Cerrar",
+                        tint = theme.textPrimary
+                    )
                 }
             }
 
@@ -211,7 +218,10 @@ fun ProfileAccountView(
                     border = BorderStroke(1.dp, theme.borderCard),
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Row(modifier = Modifier.padding(4.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+                    Row(
+                        modifier = Modifier.padding(4.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
                         Box(
                             modifier = Modifier
                                 .weight(1f)
@@ -290,10 +300,25 @@ fun ProfileAccountView(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         ProfileDetailRow("Nombre", userProfile.nombre, Icons.Outlined.Badge, theme)
-                        ProfileDetailRow("Apellido", userProfile.apellido, Icons.Outlined.Badge, theme)
+                        ProfileDetailRow(
+                            "Apellido",
+                            userProfile.apellido,
+                            Icons.Outlined.Badge,
+                            theme
+                        )
                         ProfileDetailRow("Correo", userProfile.correo, Icons.Outlined.Email, theme)
-                        ProfileDetailRow("Alergias / Polen", userProfile.alergias, Icons.Outlined.Shield, theme)
-                        ProfileDetailRow("Tipo de Entorno", userProfile.tipoCiudad, Icons.Outlined.Place, theme)
+                        ProfileDetailRow(
+                            "Alergias / Polen",
+                            userProfile.alergias,
+                            Icons.Outlined.Shield,
+                            theme
+                        )
+                        ProfileDetailRow(
+                            "Tipo de Entorno",
+                            userProfile.tipoCiudad,
+                            Icons.Outlined.Place,
+                            theme
+                        )
                     }
 
                     Spacer(Modifier.height(20.dp))
@@ -307,7 +332,11 @@ fun ProfileAccountView(
                             .height(50.dp),
                         shape = RoundedCornerShape(16.dp)
                     ) {
-                        Icon(Icons.AutoMirrored.Outlined.Logout, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Icon(
+                            Icons.AutoMirrored.Outlined.Logout,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
                         Spacer(Modifier.width(8.dp))
                         Text("Cerrar Sesión", fontWeight = FontWeight.Bold, fontSize = 15.sp)
                     }
@@ -326,6 +355,8 @@ fun ProfileAccountView(
                     )
                     var regNombre by remember { mutableStateOf("") }
                     var regApellido by remember { mutableStateOf("") }
+                    var terminosAceptados by remember { mutableStateOf(false) }
+                    var terminosError by remember { mutableStateOf<String?>(null) }
 
                     val defaultAlergia = listaAlergias.firstOrNull() ?: "Ninguna / Sin alergias"
                     val defaultEntorno = listaTiposEntorno.firstOrNull() ?: "Urbana"
@@ -342,7 +373,13 @@ fun ProfileAccountView(
                             onValueChange = { regNombre = it },
                             label = { Text("Nombre") },
                             singleLine = true,
-                            leadingIcon = { Icon(Icons.Outlined.Person, contentDescription = null, tint = theme.accentBrand) },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Person,
+                                    contentDescription = null,
+                                    tint = theme.accentBrand
+                                )
+                            },
                             colors = textColors,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(16.dp)
@@ -353,7 +390,13 @@ fun ProfileAccountView(
                             onValueChange = { regApellido = it },
                             label = { Text("Apellido") },
                             singleLine = true,
-                            leadingIcon = { Icon(Icons.Outlined.Badge, contentDescription = null, tint = theme.accentBrand) },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Badge,
+                                    contentDescription = null,
+                                    tint = theme.accentBrand
+                                )
+                            },
                             colors = textColors,
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(16.dp)
@@ -364,7 +407,13 @@ fun ProfileAccountView(
                             onValueChange = onRegEmailChanged,
                             label = { Text("Correo Electrónico") },
                             singleLine = true,
-                            leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = null, tint = theme.accentBrand) },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Email,
+                                    contentDescription = null,
+                                    tint = theme.accentBrand
+                                )
+                            },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                             colors = textColors,
                             modifier = Modifier.fillMaxWidth(),
@@ -377,7 +426,13 @@ fun ProfileAccountView(
                             label = { Text("Contraseña") },
                             singleLine = true,
                             visualTransformation = PasswordVisualTransformation(),
-                            leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null, tint = theme.accentBrand) },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Lock,
+                                    contentDescription = null,
+                                    tint = theme.accentBrand
+                                )
+                            },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                             colors = textColors,
                             modifier = Modifier.fillMaxWidth(),
@@ -400,6 +455,33 @@ fun ProfileAccountView(
                             theme = theme
                         )
 
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Checkbox(
+                                checked = terminosAceptados,
+                                onCheckedChange = { terminosAceptados = it },
+                                colors = CheckboxDefaults.colors(checkedColor = theme.accentBrand)
+                            )
+                            Text(
+                                text = "Acepto los términos, condiciones y la política de privacidad de datos personales conforme a la Ley N° 19.628.",
+                                fontSize = 11.sp,
+                                color = theme.textMuted,
+                                modifier = Modifier
+                                    .clickable { terminosAceptados = !terminosAceptados }
+                                    .weight(1f)
+                            )
+                        }
+
+                        if (terminosError != null) {
+                            Text(
+                                text = terminosError!!,
+                                color = Color(0xFFEF4444),
+                                fontSize = 12.sp
+                            )
+                        }
+
                         if (errorMessage != null) {
                             Log("RegisterError", errorMessage)
                             Text(
@@ -413,6 +495,12 @@ fun ProfileAccountView(
 
                         Button(
                             onClick = {
+                                if (!terminosAceptados) {
+                                    terminosError =
+                                        "Debes aceptar los términos y condiciones (Ley N° 19.628)"
+                                    return@Button
+                                }
+                                terminosError = null
                                 onRegister(
                                     regNombre.ifBlank { "Atleta" },
                                     regApellido.ifBlank { "Pro" },
@@ -465,7 +553,13 @@ fun ProfileAccountView(
                             value = email,
                             onValueChange = onEmailChanged,
                             label = { Text("Correo Electrónico") },
-                            leadingIcon = { Icon(Icons.Outlined.Email, contentDescription = null, tint = theme.accentBrand) },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Email,
+                                    contentDescription = null,
+                                    tint = theme.accentBrand
+                                )
+                            },
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                             colors = textColors,
@@ -479,7 +573,13 @@ fun ProfileAccountView(
                             label = { Text("Contraseña") },
                             singleLine = true,
                             visualTransformation = PasswordVisualTransformation(),
-                            leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null, tint = theme.accentBrand) },
+                            leadingIcon = {
+                                Icon(
+                                    Icons.Outlined.Lock,
+                                    contentDescription = null,
+                                    tint = theme.accentBrand
+                                )
+                            },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                             colors = textColors,
                             modifier = Modifier.fillMaxWidth(),
@@ -515,6 +615,14 @@ fun ProfileAccountView(
                                 fontSize = 15.sp
                             )
                         }
+
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = "Al iniciar sesión, aceptas los Términos, Condiciones y el tratamiento de datos personales conforme a la Ley N° 19.628 sobre Protección de la Vida Privada.",
+                            fontSize = 11.sp,
+                            color = theme.textMuted,
+                            modifier = Modifier.padding(horizontal = 4.dp)
+                        )
                     }
                 }
             }

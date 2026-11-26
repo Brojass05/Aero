@@ -44,7 +44,10 @@ fun ReporteAmbientalCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
-        Box(modifier = Modifier.fillMaxWidth().background(theme.bgCard)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(theme.bgCard)
         ) {
             Column(
                 modifier = Modifier
@@ -97,35 +100,35 @@ fun ContenidoReporteDeporte(
     val ozono3 = climaHourly?.ozone?.firstOrNull() ?: 0f
     val indiceUV = climaHourly?.uvIndex?.firstOrNull() ?: 0f
 
-    val mensajePm25 = when {
-        pm25 in 0.0f..12.0f -> "Bueno"
-        pm25 in 12.1f..35.4f -> "Mala"
-        pm25 in 35.5f..55.4f -> "Riesgosa"
-        pm25 in 55.5f..150.4f -> "Insalubre"
-        pm25 in 150.5f..250.4f -> "Muy dañino"
+    val mensajePm25 = when (pm25) {
+        in 0.0f..12.0f -> "Bueno"
+        in 12.1f..35.4f -> "Mala"
+        in 35.5f..55.4f -> "Riesgosa"
+        in 55.5f..150.4f -> "Insalubre"
+        in 150.5f..250.4f -> "Muy dañino"
         else -> "Peligroso"
     }
-    val mensajePm10 = when {
-        pm10 in 0.0f..54.9f -> "Bueno"
-        pm10 in 55.0f..154.9f -> "Mala"
-        pm10 in 155.0f..254.9f -> "Riesgosa"
-        pm10 in 255.0f..354.9f -> "Insalubre"
-        pm10 in 355.0f..424.9f -> "Muy dañino"
+    val mensajePm10 = when (pm10) {
+        in 0.0f..54.9f -> "Bueno"
+        in 55.0f..154.9f -> "Mala"
+        in 155.0f..254.9f -> "Riesgosa"
+        in 255.0f..354.9f -> "Insalubre"
+        in 355.0f..424.9f -> "Muy dañino"
         else -> "Peligroso"
     }
-    val mensajeOzono3 = when {
-        ozono3 in 0.0f..106.9f -> "Bueno"
-        ozono3 in 107.0f..137.9f -> "Mala"
-        ozono3 in 138.0f..167.9f -> "Riesgosa"
-        ozono3 in 168.0f..206.9f -> "Insalubre"
-        ozono3 in 207.0f..392.9f -> "Muy dañino"
+    val mensajeOzono3: String = when (ozono3) {
+        in 0.0f..106.9f -> "Bueno"
+        in 107.0f..137.9f -> "Mala"
+        in 138.0f..167.9f -> "Riesgosa"
+        in 168.0f..206.9f -> "Insalubre"
+        in 207.0f..392.9f -> "Muy dañino"
         else -> "Peligroso"
     }
-    val mensajeIndiceUV = when {
-        indiceUV in 0.0f..2.9f -> "Bueno"
-        indiceUV in 3.0f..5.9f -> "Mala"
-        indiceUV in 6.0f..7.9f -> "Riesgosa"
-        indiceUV in 8.0f..10.9f -> "Insalubre"
+    val mensajeIndiceUV = when (indiceUV) {
+        in 0.0f..2.9f -> "Bueno"
+        in 3.0f..5.9f -> "Mala"
+        in 6.0f..7.9f -> "Riesgosa"
+        in 8.0f..10.9f -> "Insalubre"
         else -> "Peligroso"
     }
 
@@ -136,9 +139,11 @@ fun ContenidoReporteDeporte(
     val mejorHora = calcularMejorHoraParaEntrenar(climaHourly, tieneAlergiaReal, alergiaUsuario)
 
     Column {
-        Text(text = "Condiciones Base (Deporte al aire libre)",
+        Text(
+            text = "Condiciones Base (Deporte al aire libre)",
             fontWeight = FontWeight.Bold,
-            color = theme.textMuted)
+            color = theme.textMuted
+        )
         Spacer(modifier = Modifier.height(8.dp))
         ItemContaminante("PM2.5 (Fino)", mensajePm25, theme)
         ItemContaminante("PM10 (Respirable)", mensajePm10, theme)
@@ -189,7 +194,11 @@ fun obtenerValorPolenReal(climaHourly: HourlyData?, alergiaUsuario: String, inde
     return realVal
 }
 
-fun calcularMejorHoraParaEntrenar(climaHourly: HourlyData?, tieneAlergia: Boolean, alergiaUsuario: String): String {
+fun calcularMejorHoraParaEntrenar(
+    climaHourly: HourlyData?,
+    tieneAlergia: Boolean,
+    alergiaUsuario: String
+): String {
     if (climaHourly?.time.isNullOrEmpty()) {
         return "08:00"
     }
@@ -211,7 +220,7 @@ fun calcularMejorHoraParaEntrenar(climaHourly: HourlyData?, tieneAlergia: Boolea
         }
 
         var penalty = 0f
-        if (hour < 5 || hour > 21) {
+        if (hour !in 5..21) {
             penalty = 1000f
         }
 
@@ -220,7 +229,8 @@ fun calcularMejorHoraParaEntrenar(climaHourly: HourlyData?, tieneAlergia: Boolea
             factorPolen = obtenerValorPolenReal(climaHourly, alergiaUsuario, i)
         }
 
-        val puntajeTotal = pm25 + (pm10 * 0.4f) + (ozone * 0.5f) + (uv * 1.5f) + (factorPolen * 0.2f) + penalty
+        val puntajeTotal =
+            pm25 + (pm10 * 0.4f) + (ozone * 0.5f) + (uv * 1.5f) + (factorPolen * 0.2f) + penalty
 
         if (puntajeTotal < menorPuntaje) {
             menorPuntaje = puntajeTotal

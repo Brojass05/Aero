@@ -24,19 +24,49 @@ class ClimaRepository {
             val locationData = locationDeferred.await()
 
             android.util.Log.d("ClimaRepository", "=== DATOS OBTENIDOS DE LA API ===")
-            android.util.Log.d("ClimaRepository", "Ubicación: ${locationData.address?.getNombreUbicacion()}")
+            android.util.Log.d(
+                "ClimaRepository",
+                "Ubicación: ${locationData.address?.getNombreUbicacion()}"
+            )
             android.util.Log.d("ClimaRepository", "PM2.5: ${airData.hourly.pm25?.firstOrNull()}")
             android.util.Log.d("ClimaRepository", "PM10: ${airData.hourly.pm10?.firstOrNull()}")
             android.util.Log.d("ClimaRepository", "Ozono: ${airData.hourly.ozone?.firstOrNull()}")
-            android.util.Log.d("ClimaRepository", "Índice UV: ${airData.hourly.uvIndex?.firstOrNull()}")
-            android.util.Log.d("ClimaRepository", "Polen Aliso (alder): ${airData.hourly.alderPollen?.firstOrNull()}")
-            android.util.Log.d("ClimaRepository", "Polen Abedul (birch): ${airData.hourly.birchPollen?.firstOrNull()}")
-            android.util.Log.d("ClimaRepository", "Polen Pasto (grass): ${airData.hourly.grassPollen?.firstOrNull()}")
-            android.util.Log.d("ClimaRepository", "Polen Artemisa (mugwort): ${airData.hourly.mugwortPollen?.firstOrNull()}")
-            android.util.Log.d("ClimaRepository", "Polen Olivo (olive): ${airData.hourly.olivePollen?.firstOrNull()}")
-            android.util.Log.d("ClimaRepository", "Polen Ambrosia (ragweed): ${airData.hourly.ragweedPollen?.firstOrNull()}")
-            android.util.Log.d("ClimaRepository", "Temperatura: ${weatherData.hourly.temperature?.firstOrNull()}")
-            android.util.Log.d("ClimaRepository", "Humedad: ${weatherData.hourly.humidity?.firstOrNull()}")
+            android.util.Log.d(
+                "ClimaRepository",
+                "Índice UV: ${airData.hourly.uvIndex?.firstOrNull()}"
+            )
+            android.util.Log.d(
+                "ClimaRepository",
+                "Polen Aliso (alder): ${airData.hourly.alderPollen?.firstOrNull()}"
+            )
+            android.util.Log.d(
+                "ClimaRepository",
+                "Polen Abedul (birch): ${airData.hourly.birchPollen?.firstOrNull()}"
+            )
+            android.util.Log.d(
+                "ClimaRepository",
+                "Polen Pasto (grass): ${airData.hourly.grassPollen?.firstOrNull()}"
+            )
+            android.util.Log.d(
+                "ClimaRepository",
+                "Polen Artemisa (mugwort): ${airData.hourly.mugwortPollen?.firstOrNull()}"
+            )
+            android.util.Log.d(
+                "ClimaRepository",
+                "Polen Olivo (olive): ${airData.hourly.olivePollen?.firstOrNull()}"
+            )
+            android.util.Log.d(
+                "ClimaRepository",
+                "Polen Ambrosia (ragweed): ${airData.hourly.ragweedPollen?.firstOrNull()}"
+            )
+            android.util.Log.d(
+                "ClimaRepository",
+                "Temperatura: ${weatherData.hourly.temperature?.firstOrNull()}"
+            )
+            android.util.Log.d(
+                "ClimaRepository",
+                "Humedad: ${weatherData.hourly.humidity?.firstOrNull()}"
+            )
             android.util.Log.d("ClimaRepository", "=================================")
 
             val combinedClima = airData.copy(

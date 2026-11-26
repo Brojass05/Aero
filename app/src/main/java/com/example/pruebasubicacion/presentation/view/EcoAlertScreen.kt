@@ -1,8 +1,10 @@
 package com.example.pruebasubicacion.presentation.view
 
 
+// ---- Imports Propios ----
 
-import android.app.Dialog
+// ---- Imports Propios ----
+
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -12,7 +14,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -53,10 +54,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,25 +68,28 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-// ---- Imports Propios ----
-
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pruebasubicacion.data.model.ClimaEstado
+import com.example.pruebasubicacion.data.repository.UserPreferences
+import com.example.pruebasubicacion.data.repository.dataStore
 import com.example.pruebasubicacion.presentation.ui.misc.TopDashboardBar
+import com.example.pruebasubicacion.presentation.ui.notifications.showSimpleNotification
+import com.example.pruebasubicacion.presentation.viewmodel.AuthViewModel
 import com.example.pruebasubicacion.util.GenerateReportButton
 import com.example.pruebasubicacion.util.HeroAQIArcMeter
 import com.example.pruebasubicacion.util.LocationCardAdaptive
 import com.example.pruebasubicacion.util.WeeklyForecast
 import com.example.pruebasubicacion.util.colors.getAdaptiveThemeColors
 import com.example.pruebasubicacion.util.colors.getRiskInfoAdaptive
-import com.example.pruebasubicacion.util.creaInforme
 import com.example.pruebasubicacion.util.sumarHorasUtc
-// ---- Imports Propios ----
-
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 // --- Modelo de Datos de Perfil de Usuario ---
@@ -136,6 +142,33 @@ fun EcoAlertScreen(
 
     // Estado de Usuario (Perfil y Login)
     var userProfile by remember { mutableStateOf(UserProfileData()) }
+    val isInPreview = LocalInspectionMode.current
+    val context = if (!isInPreview) LocalContext.current else null
+    val coroutineScope = rememberCoroutineScope()
+    val userPreferences = remember {
+        if (!isInPreview && context != null) UserPreferences(context.applicationContext.dataStore) else null
+    }
+    val authViewModel: AuthViewModel? = if (!isInPreview) {
+        viewModel()
+    } else {
+        null
+    }
+
+    LaunchedEffect(authViewModel?.uiState?.isLoggedIn) {
+        if (authViewModel?.uiState?.isLoggedIn == true) {
+            userProfile = UserProfileData(
+                isLoggedIn = true,
+                nombre = authViewModel.uiState.nombre,
+                apellido = authViewModel.uiState.apellido,
+                tieneAlergia = authViewModel.uiState.tieneAlergia,
+                alergias = authViewModel.uiState.alergia,
+                tipoCiudad = authViewModel.uiState.tipoCiudad
+            )
+        } else {
+            userProfile = UserProfileData(isLoggedIn = false)
+        }
+    }
+
     var activeMetricInfo by remember { mutableStateOf<Triple<String, String, ImageVector>?>(null) }
 
     val reportAction: () -> Unit = {
@@ -170,6 +203,38 @@ fun EcoAlertScreen(
                         onNotificationClick = {
                             showNotifications = !showNotifications
                             showProfile = false
+                            if (showNotifications && context != null && userPreferences != null) {
+                                coroutineScope.launch {
+                                    userPreferences.resetLastSetNoti()
+                                    showSimpleNotification(
+                                        context = context,
+                                        id = 101,
+                                        titulo = "Alerta de Contaminación",
+                                        mensaje = "El nivel de contaminación ha subido. Ten cuidado si vas a salir",
+                                        idNoti = "n1",
+                                        iconRes = android.R.drawable.ic_dialog_alert,
+                                        userPreferences = userPreferences
+                                    )
+                                    showSimpleNotification(
+                                        context = context,
+                                        id = 102,
+                                        titulo = "Mejora del Aire",
+                                        mensaje = "El nivel de contaminación ha bajado favorablemente.",
+                                        idNoti = "n2",
+                                        iconRes = android.R.drawable.ic_dialog_info,
+                                        userPreferences = userPreferences
+                                    )
+                                    showSimpleNotification(
+                                        context = context,
+                                        id = 103,
+                                        titulo = "Estado Estable",
+                                        mensaje = "El nivel de contaminación se mantiene sin cambios significativos.",
+                                        idNoti = "n3",
+                                        iconRes = android.R.drawable.ic_menu_info_details,
+                                        userPreferences = userPreferences
+                                    )
+                                }
+                            }
                         },
                         onProfileClick = {
                             showProfile = !showProfile
@@ -588,17 +653,6 @@ fun MainPollutantsCardExtended(
                     )
                 }
 
-                TextButton(
-                    onClick = { creaInforme(h) },
-                    modifier = Modifier.height(32.dp)
-                ) {
-                    Text(
-                        "Generar Informe",
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = theme.accentBrand
-                    )
-                }
             }
 
             val list = listOf(
@@ -679,22 +733,6 @@ fun getRiskIconForPM25(pm25: Float): ImageVector = when {
     else -> Icons.Outlined.Dangerous
 }
 
-
-@Composable
-fun NotificationItemAdaptive(title: String, desc: String, theme: ThemeColors) {
-    Surface(
-        Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
-        color = theme.bgSubtle,
-        border = BorderStroke(1.dp, theme.accentBrand.copy(0.2f))
-    ) {
-        Column(Modifier.padding(14.dp)) {
-            Text(title, fontWeight = FontWeight.Bold, fontSize = 14.sp, color = theme.accentBrand)
-            Spacer(Modifier.height(4.dp))
-            Text(desc, fontSize = 13.sp, color = theme.textMuted, lineHeight = 18.sp)
-        }
-    }
-}
 
 @Composable
 fun EnvironmentalMetricsGrid(

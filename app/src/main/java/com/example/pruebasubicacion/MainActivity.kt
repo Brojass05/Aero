@@ -50,13 +50,14 @@ class MainActivity : ComponentActivity() {
         val fineLocationGranted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false
         val coarseLocationGranted = permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false
         val postNotificationGranted = permissions[Manifest.permission.POST_NOTIFICATIONS] ?: false
-        val backgroundLocationGranted = permissions[Manifest.permission.ACCESS_BACKGROUND_LOCATION] ?: false
+        val backgroundLocationGranted =
+            permissions[Manifest.permission.ACCESS_BACKGROUND_LOCATION] ?: false
         if (
             fineLocationGranted ||
             coarseLocationGranted ||
             postNotificationGranted ||
             backgroundLocationGranted
-            ) {
+        ) {
             obtenerUbicacionRealTime()
         } else {
 
@@ -86,26 +87,33 @@ class MainActivity : ComponentActivity() {
 
             override fun onStop(owner: LifecycleOwner) {
 
-                if(isFinishing){
+                if (isFinishing) {
                     val userPreference = UserPreferences(applicationContext.dataStore)
                     lifecycleScope.launch {
                         userPreference.resetLastSetNoti()
                     }
-                    WorkManager.getInstance(this@MainActivity).cancelUniqueWork("PM_CHECKER_WORKER_UNIQUE")
-   
+                    WorkManager.getInstance(this@MainActivity)
+                        .cancelUniqueWork("PM_CHECKER_WORKER_UNIQUE")
+
                 }
-                
+
                 ChequeadorBackground.segundoPlano = true
             }
         })
     }
-  
+
 
     private fun checkPermissionsAndGetLocation() {
         val permissionsToRequest = mutableListOf<String>()
 
-        val fineLocationGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val coarseLocationGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val fineLocationGranted = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarseLocationGranted = ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
 
         // Si falta alguno de los de ubicación frontal, los pedimos
         if (!fineLocationGranted || !coarseLocationGranted) {
@@ -114,7 +122,11 @@ class MainActivity : ComponentActivity() {
         }
 
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             permissionsToRequest.add(Manifest.permission.POST_NOTIFICATIONS)
         }
 
@@ -123,7 +135,11 @@ class MainActivity : ComponentActivity() {
             requestPermissionLauncher.launch(permissionsToRequest.toTypedArray())
         } else {
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 requestPermissionLauncher.launch(arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION))
             } else {
                 obtenerUbicacionRealTime()

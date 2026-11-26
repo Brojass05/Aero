@@ -18,6 +18,7 @@ interface AuthRepository {
         fkIdAlergia: Int?,
         fkIdTipoCiudad: Int?
     ): Result<AuthResult?>
+
     fun getCurrentUser(): FirebaseUser?
     fun logout()
 }
@@ -50,7 +51,10 @@ class AuthRepositoryImpl(
             val userId = authResult?.user?.uid ?: correo
 
             // Guardar usuario en PostgreSQL vía Firebase Data Connect
-            android.util.Log.d("AuthRepository", "Registrando usuario $userId con fkIdAlergia=$fkIdAlergia, fkIdTipoCiudad=$fkIdTipoCiudad")
+            android.util.Log.d(
+                "AuthRepository",
+                "Registrando usuario $userId con fkIdAlergia=$fkIdAlergia, fkIdTipoCiudad=$fkIdTipoCiudad"
+            )
             connector.upsertUsuario.execute(
                 userid = userId,
                 nombre = nombre,
@@ -86,6 +90,20 @@ data class AuthUiState(
     val tieneAlergia: Boolean = false,
     val alergia: String = "",
     val tipoCiudad: String = "",
-    val listaAlergias: List<String> = listOf("Polvo de Aliso", "Polen de Abedul", "Polen de pasto", "Polen de Artemisa", "Polen de Olivo", "Polen de Ambrosia", "Sin Alergias / Ninguna"),
-    val listaTiposEntorno: List<String> = listOf("Zona Rural / Campo", "Zona Semiurbana / Pueblo", "Ciudad Media (Baja polución)", "Gran Ciudad / Metrópoli (Alta polución)", "Zona Industrial / Polución crítica")
+    val listaAlergias: List<String> = listOf(
+        "Polvo de Aliso",
+        "Polen de Abedul",
+        "Polen de pasto",
+        "Polen de Artemisa",
+        "Polen de Olivo",
+        "Polen de Ambrosia",
+        "Sin Alergias / Ninguna"
+    ),
+    val listaTiposEntorno: List<String> = listOf(
+        "Zona Rural / Campo",
+        "Zona Semiurbana / Pueblo",
+        "Ciudad Media (Baja polución)",
+        "Gran Ciudad / Metrópoli (Alta polución)",
+        "Zona Industrial / Polución crítica"
+    )
 )

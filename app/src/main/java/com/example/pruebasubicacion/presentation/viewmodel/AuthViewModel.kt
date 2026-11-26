@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.pruebasubicacion.data.repository.AuthRepository
 import com.example.pruebasubicacion.data.repository.AuthRepositoryImpl
 import com.example.pruebasubicacion.data.repository.AuthUiState
+import com.example.pruebasubicacion.util.errorList
 import com.example.pruebasubicacion.util.fetchAlergias
 import com.example.pruebasubicacion.util.fetchTiposEntorno
 import com.example.pruebasubicacion.util.fetchUsarioPorId
@@ -21,6 +22,31 @@ class AuthViewModel(
 
     init {
         loadAlergiasYEntornos()
+        checkExistingSession()
+    }
+
+    private fun checkExistingSession() {
+        viewModelScope.launch {
+            try {
+                val currentUser = authRepository.getCurrentUser()
+                if (currentUser != null) {
+                    val uid = currentUser.uid
+                    val usuario = fetchUsarioPorId(uid)
+                    if (usuario != null) {
+                        uiState = uiState.copy(
+                            isLoggedIn = true,
+                            nombre = usuario.nombre,
+                            apellido = usuario.apellido,
+                            tieneAlergia = usuario.tieneAlergia,
+                            alergia = usuario.alergia ?: "Ninguna",
+                            tipoCiudad = usuario.tipoEntorno ?: "Urbana"
+                        )
+                    }
+                }
+            } catch (_: Exception) {
+                // Ignore network errors on session check
+            }
+        }
     }
 
     fun loadAlergiasYEntornos() {
@@ -28,11 +54,11 @@ class AuthViewModel(
             try {
                 val alergias = fetchAlergias()
                 val entornos = fetchTiposEntorno()
-                uiState = uiState.copy(
-                    listaAlergias = if (alergias.isNotEmpty()) alergias else uiState.listaAlergias,
-                    listaTiposEntorno = if (entornos.isNotEmpty()) entornos else uiState.listaTiposEntorno
-                )
-            } catch (e: Exception) {
+                uiState.copy(
+                    listaAlergias = alergias.ifEmpty { uiState.listaAlergias },
+                    listaTiposEntorno = entornos.ifEmpty { uiState.listaTiposEntorno }
+                ).also { uiState = it }
+            } catch (_: Exception) {
                 // Mantener listas por defecto si falla la red
             }
         }
@@ -57,18 +83,16 @@ class AuthViewModel(
     fun register(
         nombre: String = "Usuario",
         apellido: String = "App",
-        tieneAlergia: Boolean = false,
         fkIdAlergia: Int? = null,
         fkIdTipoCiudad: Int? = null,
         onSuccess: () -> Unit = {}
     ) {
         val min = 1
         val max = 6
-        var tieneAlergiaFinal = tieneAlergia
-        if (fkIdAlergia in min..max){
-            tieneAlergiaFinal = true
-        }else{
-            tieneAlergiaFinal = false
+        val tieneAlergiaFinal: Boolean = if (fkIdAlergia in min..max) {
+            true
+        } else {
+            false
         }
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, errorMessage = null)
@@ -84,11 +108,11 @@ class AuthViewModel(
 
             uiState = if (result.isSuccess) {
                 onSuccess()
-                uiState.copy(isLoading = false, isLoggedIn = true)
+                uiState.copy(isLoading = false, isLoggedIn = true, regEmail = "", regPassword = "")
             } else {
                 uiState.copy(
                     isLoading = false,
-                    errorMessage = result.exceptionOrNull()?.localizedMessage ?: "Error desconocido"
+                    errorMessage = traducirErrorFirebase(result.exceptionOrNull())
                 )
             }
         }
@@ -103,8 +127,8 @@ class AuthViewModel(
                 val uid = authRepository.getCurrentUser()?.uid
 
                 if (uid != null) {
-                    val usuario =  fetchUsarioPorId(uid)
-                    if (usuario != null){
+                    val usuario = fetchUsarioPorId(uid)
+                    if (usuario != null) {
                         uiState = uiState.copy(
                             nombre = usuario.nombre,
                             apellido = usuario.apellido,
@@ -116,13 +140,53 @@ class AuthViewModel(
                 }
 
                 onSuccess()
-                uiState = uiState.copy(isLoading = false, isLoggedIn = true)
+                uiState =
+                    uiState.copy(isLoading = false, isLoggedIn = true, email = "", password = "")
             } else {
-                uiState.copy(
+                uiState = uiState.copy(
                     isLoading = false,
-                    errorMessage = result.exceptionOrNull()?.localizedMessage ?: "Error desconocido"
+                    errorMessage = traducirErrorFirebase(result.exceptionOrNull())
                 )
             }
         }
+    }
+
+    private fun traducirErrorFirebase(exception: Throwable?): String {
+        val mensaje = exception?.localizedMessage ?: exception?.message ?: ""
+
+        for ((key, value) in errorList) {
+            if (mensaje.contains(key, ignoreCase = true)) {
+                return value
+            }
+        }
+
+        return when {
+            mensaje.contains("empty or null", ignoreCase = true) || mensaje.contains(
+                "blank",
+                ignoreCase = true
+            ) ->
+                "Debe completar todos los campos obligatorios."
+
+            mensaje.contains("network", ignoreCase = true) || mensaje.contains(
+                "timeout",
+                ignoreCase = true
+            ) ->
+                "Error de conexión. Compruebe su acceso a Internet."
+
+            mensaje.isNotBlank() -> "No se pudo completar la operación. Verifique sus datos."
+            else -> "Ocurrió un error inesperado. Intente nuevamente."
+        }
+    }
+
+    fun logout() {
+        authRepository.logout()
+        uiState = AuthUiState(
+            email = "",
+            password = "",
+            regEmail = "",
+            regPassword = "",
+            listaAlergias = uiState.listaAlergias,
+            listaTiposEntorno = uiState.listaTiposEntorno
+        )
     }
 }

@@ -21,9 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pruebasubicacion.presentation.view.ThemeColors
+import com.example.pruebasubicacion.util.colors.getAdaptiveThemeColors
 
 @Composable
 fun TopDashboardBar(
@@ -69,11 +71,12 @@ fun TopDashboardBar(
             IconButton(
                 onClick = onNotificationClick,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(50.dp)
                     .background(
                         if (showNotifications) theme.accentBrand.copy(0.2f) else theme.bgCard,
                         CircleShape
                     )
+
             ) {
                 Icon(
                     Icons.Outlined.NotificationsActive,
@@ -87,11 +90,13 @@ fun TopDashboardBar(
             IconButton(
                 onClick = onProfileClick,
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(50.dp)
                     .background(
                         if (showProfile || isLoggedIn) theme.accentBrand.copy(0.2f) else theme.bgCard,
                         CircleShape
                     )
+
+
             ) {
                 Icon(
                     Icons.Outlined.AccountCircle,
@@ -102,4 +107,18 @@ fun TopDashboardBar(
             }
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun TopDashboardBarPreview() {
+    TopDashboardBar(
+        theme = getAdaptiveThemeColors(isDark = false),
+        isLoggedIn = true,
+        showNotifications = true,
+        showProfile = true,
+        onNotificationClick = {},
+        onProfileClick = {}
+    )
 }

@@ -1,13 +1,12 @@
-
 @file:Suppress(
-  "KotlinRedundantDiagnosticSuppress",
-  "PropertyName",
-  "MayBeConstant",
-  "RedundantVisibilityModifier",
-  "RedundantCompanionReference",
-  "RemoveEmptyClassBody",
-  "SpellCheckingInspection",
-  "unused",
+    "KotlinRedundantDiagnosticSuppress",
+    "PropertyName",
+    "MayBeConstant",
+    "RedundantVisibilityModifier",
+    "RedundantCompanionReference",
+    "RemoveEmptyClassBody",
+    "SpellCheckingInspection",
+    "unused",
 )
 
 package com.google.firebase.dataconnect.generated
@@ -19,95 +18,92 @@ import kotlinx.coroutines.flow.map as _flow_map
 
 public interface GetUsuariosQuery :
     com.google.firebase.dataconnect.generated.GeneratedQuery<
-      ExampleConnector,
-      GetUsuariosQuery.Data,
-      Unit
-    >
-{
-  
+            ExampleConnector,
+            GetUsuariosQuery.Data,
+            Unit
+            > {
 
-  
+
     @kotlinx.serialization.Serializable
-  public data class Data(
-  
-    val usuarios: List<UsuariosItem>,
-  
-  ) {
-    
-      
+    public data class Data(
+
+        val usuarios: List<UsuariosItem>,
+
+        ) {
+
+
         @kotlinx.serialization.Serializable
-  public data class UsuariosItem(
-  
-    val userid: String,
-  
-    val nombre: String,
-  
-    val apellido: String,
-  
-    val tienealergia: Boolean,
-  
-    val correo: String,
-  
-    val fkIdAlergia: Int?,
-  
-    val fkIdTipoCiudad: Int?,
-  
-  ) {
-    
-    
-  }
-      
-    
-    
-  }
-  
+        public data class UsuariosItem(
 
-  public companion object {
-    public val operationName: String = "GetUsuarios"
+            val userid: String,
 
-    public val dataDeserializer: kotlinx.serialization.DeserializationStrategy<Data> =
-      kotlinx.serialization.serializer()
+            val nombre: String,
 
-    public val variablesSerializer: kotlinx.serialization.SerializationStrategy<Unit> =
-      kotlinx.serialization.serializer()
-  }
+            val apellido: String,
+
+            val tienealergia: Boolean,
+
+            val correo: String,
+
+            val fkIdAlergia: Int?,
+
+            val fkIdTipoCiudad: Int?,
+
+            ) {
+
+
+        }
+
+
+    }
+
+
+    public companion object {
+        public val operationName: String = "GetUsuarios"
+
+        public val dataDeserializer: kotlinx.serialization.DeserializationStrategy<Data> =
+            kotlinx.serialization.serializer()
+
+        public val variablesSerializer: kotlinx.serialization.SerializationStrategy<Unit> =
+            kotlinx.serialization.serializer()
+    }
 }
 
 public fun GetUsuariosQuery.ref(
-  
+
 ): com.google.firebase.dataconnect.QueryRef<
-    GetUsuariosQuery.Data,
-    Unit
-  > =
-  ref(
-    
-      Unit
-    
-  )
+        GetUsuariosQuery.Data,
+        Unit
+        > =
+    ref(
+
+        Unit
+
+    )
 
 public suspend fun GetUsuariosQuery.execute(
 
-  
+
     fetchPolicy: com.google.firebase.dataconnect.QueryRef.FetchPolicy = com.google.firebase.dataconnect.QueryRef.FetchPolicy.PREFER_CACHE,
-  
-
-  ): com.google.firebase.dataconnect.QueryResult<
-    GetUsuariosQuery.Data,
-    Unit
-  > =
-  ref(
-    
-  ).execute(fetchPolicy = fetchPolicy)
 
 
-  public fun GetUsuariosQuery.flow(
-    
-    ): kotlinx.coroutines.flow.Flow<GetUsuariosQuery.Data> =
+    ): com.google.firebase.dataconnect.QueryResult<
+        GetUsuariosQuery.Data,
+        Unit
+        > =
     ref(
-        
-      ).subscribe()
-      .flow
-      ._flow_map { querySubscriptionResult -> querySubscriptionResult.result.getOrNull() }
-      ._flow_filterNotNull()
-      ._flow_map { it.data }
+
+    ).execute(fetchPolicy = fetchPolicy)
+
+
+public fun GetUsuariosQuery.flow(
+
+): kotlinx.coroutines.flow.Flow<GetUsuariosQuery.Data> =
+    ref(
+
+    ).subscribe()
+        .flow
+        ._flow_map { querySubscriptionResult -> querySubscriptionResult.result.getOrNull() }
+        ._flow_filterNotNull()
+        ._flow_map { it.data }
 

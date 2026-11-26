@@ -30,7 +30,12 @@ class DataConnectTest {
             val result = connector.getAlergias.execute()
             val alergias = result.data.alergias
             android.util.Log.d("DataConnectTest", "Alergias encontradas: ${alergias.size}")
-            alergias.forEach { android.util.Log.d("DataConnectTest", " - ${it.idalergia}: ${it.nombrealergia}") }
+            alergias.forEach {
+                android.util.Log.d(
+                    "DataConnectTest",
+                    " - ${it.idalergia}: ${it.nombrealergia}"
+                )
+            }
             assertNotNull(alergias)
         } catch (e: Exception) {
             android.util.Log.e("DataConnectTest", "Error en testGetAlergias: ${e.message}", e)
@@ -45,13 +50,19 @@ class DataConnectTest {
             val result = connector.getTipoEntornos.execute()
             val entornos = result.data.tipoEntornos
             android.util.Log.d("DataConnectTest", "Tipos de Entorno encontrados: ${entornos.size}")
-            entornos.forEach { android.util.Log.d("DataConnectTest", " - ${it.idtipoentorno}: ${it.descripcion}") }
+            entornos.forEach {
+                android.util.Log.d(
+                    "DataConnectTest",
+                    " - ${it.idtipoentorno}: ${it.descripcion}"
+                )
+            }
             assertNotNull(entornos)
         } catch (e: Exception) {
             android.util.Log.e("DataConnectTest", "Error en testGetTipoEntornos: ${e.message}", e)
             throw e
         }
     }
+
     @Test
     fun testGetUsuarioById() = runBlocking<Unit> {
         val uid = "FDS317G1aYQGSixO74V81HLiUoS2"
@@ -63,18 +74,31 @@ class DataConnectTest {
             assertNotNull(usuario)
 
             if (usuario != null) {
-                android.util.Log.d("DataConnectTest", "Usuario encontrado: ${usuario.nombre} ${usuario.apellido}")
+                android.util.Log.d(
+                    "DataConnectTest",
+                    "Usuario encontrado: ${usuario.nombre} ${usuario.apellido}"
+                )
                 android.util.Log.d("DataConnectTest", " - Correo: ${usuario.correo}")
-                android.util.Log.d("DataConnectTest", " - Alergia: ${usuario.alergia?.nombrealergia ?: "Sin registro"}")
-                android.util.Log.d("DataConnectTest", " - Entorno: ${usuario.tipoEntorno?.descripcion ?: "Sin registro"}")
+                android.util.Log.d(
+                    "DataConnectTest",
+                    " - Alergia: ${usuario.alergia?.nombrealergia ?: "Sin registro"}"
+                )
+                android.util.Log.d(
+                    "DataConnectTest",
+                    " - Entorno: ${usuario.tipoEntorno?.descripcion ?: "Sin registro"}"
+                )
             } else {
-                android.util.Log.w("DataConnectTest", "No se encontró ningún usuario con el ID: $uid")
+                android.util.Log.w(
+                    "DataConnectTest",
+                    "No se encontró ningún usuario con el ID: $uid"
+                )
             }
         } catch (e: Exception) {
             android.util.Log.e("DataConnectTest", "Error en testGetUsuarioById: ${e.message}", e)
             throw e
         }
     }
+
     @Test
     fun testGetUsuarios() {
         runBlocking {
@@ -83,7 +107,10 @@ class DataConnectTest {
                 val result = connector.getUsuarios.execute()
                 val usuarios = result.data.usuarios
 
-                android.util.Log.d("DataConnectTest", "Total usuarios encontrados: ${usuarios.size}")
+                android.util.Log.d(
+                    "DataConnectTest",
+                    "Total usuarios encontrados: ${usuarios.size}"
+                )
                 usuarios.forEach { user ->
                     android.util.Log.d(
                         "DataConnectTest",
@@ -110,15 +137,31 @@ class DataConnectTest {
                 assertNotNull(usuario)
 
                 if (usuario != null) {
-                    android.util.Log.d("DataConnectTest", "Usuario encontrado: ${usuario.nombre} ${usuario.apellido}")
+                    android.util.Log.d(
+                        "DataConnectTest",
+                        "Usuario encontrado: ${usuario.nombre} ${usuario.apellido}"
+                    )
                     android.util.Log.d("DataConnectTest", " - Correo: ${usuario.correo}")
-                    android.util.Log.d("DataConnectTest", " - Alergia: ${usuario.fkIdAlergia ?: "Sin registro"}")
-                    android.util.Log.d("DataConnectTest", " - Entorno: ${usuario.fkIdTipoCiudad ?: "Sin registro"}")
+                    android.util.Log.d(
+                        "DataConnectTest",
+                        " - Alergia: ${usuario.fkIdAlergia ?: "Sin registro"}"
+                    )
+                    android.util.Log.d(
+                        "DataConnectTest",
+                        " - Entorno: ${usuario.fkIdTipoCiudad ?: "Sin registro"}"
+                    )
                 } else {
-                    android.util.Log.w("DataConnectTest", "No se encontró ningún usuario con el ID: $uid")
+                    android.util.Log.w(
+                        "DataConnectTest",
+                        "No se encontró ningún usuario con el ID: $uid"
+                    )
                 }
             } catch (e: Exception) {
-                android.util.Log.e("DataConnectTest", "Error en testGetFullUsuarioById: ${e.message}", e)
+                android.util.Log.e(
+                    "DataConnectTest",
+                    "Error en testGetFullUsuarioById: ${e.message}",
+                    e
+                )
                 throw e
             }
         }
