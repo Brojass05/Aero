@@ -160,6 +160,7 @@ fun EcoAlertScreen(
                 isLoggedIn = true,
                 nombre = authViewModel.uiState.nombre,
                 apellido = authViewModel.uiState.apellido,
+                correo = authViewModel.uiState.userEmail,
                 tieneAlergia = authViewModel.uiState.tieneAlergia,
                 alergias = authViewModel.uiState.alergia,
                 tipoCiudad = authViewModel.uiState.tipoCiudad

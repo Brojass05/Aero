@@ -1,5 +1,6 @@
 package com.example.pruebasubicacion.util
 
+import android.content.res.Configuration
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -32,13 +33,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pruebasubicacion.data.model.ClimaEstado
 import com.example.pruebasubicacion.presentation.view.getRiskIconForPM25
 import com.example.pruebasubicacion.util.colors.getRiskInfoAdaptive
-
 
 @Composable
 fun HeroAQIArcMeter(estado: ClimaEstado, selectedTab: Int, isDark: Boolean) {
@@ -48,6 +49,9 @@ fun HeroAQIArcMeter(estado: ClimaEstado, selectedTab: Int, isDark: Boolean) {
 
     val activePm25 = listaPm25[currentIndex]
     val risk = getRiskInfoAdaptive(activePm25, isDark)
+
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     val recommendation = if (selectedTab == 0) {
         when {
@@ -71,7 +75,7 @@ fun HeroAQIArcMeter(estado: ClimaEstado, selectedTab: Int, isDark: Boolean) {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(32.dp),
+        shape = RoundedCornerShape(if (isLandscape) 24.dp else 32.dp),
         colors = CardDefaults.cardColors(containerColor = animatedColor),
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp)
     ) {
@@ -89,8 +93,8 @@ fun HeroAQIArcMeter(estado: ClimaEstado, selectedTab: Int, isDark: Boolean) {
                 )
         ) {
             Column(
-                modifier = Modifier.padding(26.dp),
-                verticalArrangement = Arrangement.spacedBy(18.dp)
+                modifier = Modifier.padding(if (isLandscape) 16.dp else 26.dp),
+                verticalArrangement = Arrangement.spacedBy(if (isLandscape) 10.dp else 18.dp)
             ) {
                 // Header con insignia Elite
                 Row(
@@ -100,19 +104,19 @@ fun HeroAQIArcMeter(estado: ClimaEstado, selectedTab: Int, isDark: Boolean) {
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Surface(
                             shape = CircleShape,
                             color = Color.White.copy(0.25f),
-                            modifier = Modifier.size(36.dp)
+                            modifier = Modifier.size(if (isLandscape) 30.dp else 36.dp)
                         ) {
                             Box(contentAlignment = Alignment.Center) {
                                 Icon(
                                     getRiskIconForPM25(activePm25),
                                     contentDescription = null,
                                     tint = Color.White,
-                                    modifier = Modifier.size(20.dp)
+                                    modifier = Modifier.size(if (isLandscape) 16.dp else 20.dp)
                                 )
                             }
                         }
@@ -120,14 +124,14 @@ fun HeroAQIArcMeter(estado: ClimaEstado, selectedTab: Int, isDark: Boolean) {
                             Text(
                                 "CALIDAD DEL AIRE",
                                 color = Color.White.copy(0.85f),
-                                fontSize = 11.sp,
+                                fontSize = if (isLandscape) 10.sp else 11.sp,
                                 fontWeight = FontWeight.Black,
                                 letterSpacing = 1.5.sp
                             )
                             Text(
-                                "MODO ATLETA PRO",
+                                "MODO DEPORTISTA",
                                 color = Color.White.copy(0.7f),
-                                fontSize = 9.sp,
+                                fontSize = if (isLandscape) 8.sp else 9.sp,
                                 fontWeight = FontWeight.Bold,
                                 letterSpacing = 1.sp
                             )
@@ -142,104 +146,161 @@ fun HeroAQIArcMeter(estado: ClimaEstado, selectedTab: Int, isDark: Boolean) {
                         Text(
                             text = risk.category.uppercase(),
                             color = Color.White,
-                            fontSize = 12.sp,
+                            fontSize = if (isLandscape) 10.sp else 12.sp,
                             fontWeight = FontWeight.Black,
-                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp),
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = if (isLandscape) 4.dp else 6.dp),
                             letterSpacing = 0.5.sp
                         )
                     }
                 }
 
-                // Métrica Central PM2.5 (Interactiva)
-                TextButton(
-                    onClick = {
-                        currentIndex = (currentIndex + 1) % listaPm25.size
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.Start,
-                        modifier = Modifier.fillMaxWidth()
+                if (isLandscape) {
+                    // MODO HORIZONTAL: Diseño optimizado en Row (Izquierda: Métrica, Derecha: Recomendación)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(verticalAlignment = Alignment.Bottom) {
-                            Text(
-                                text = "$activePm25",
-                                color = Color.White,
-                                fontSize = 52.sp,
-                                fontWeight = FontWeight.Black,
-                                lineHeight = 52.sp
-                            )
-                            Spacer(Modifier.width(10.dp))
-                            Column(modifier = Modifier.padding(bottom = 6.dp)) {
+                        TextButton(
+                            onClick = { currentIndex = (currentIndex + 1) % listaPm25.size },
+                            modifier = Modifier.weight(0.9f)
+                        ) {
+                            Column(horizontalAlignment = Alignment.Start, modifier = Modifier.fillMaxWidth()) {
+                                Row(verticalAlignment = Alignment.Bottom) {
+                                    Text(
+                                        text = "$activePm25",
+                                        color = Color.White,
+                                        fontSize = 38.sp,
+                                        fontWeight = FontWeight.Black,
+                                        lineHeight = 38.sp
+                                    )
+                                    Spacer(Modifier.width(6.dp))
+                                    Column(modifier = Modifier.padding(bottom = 4.dp)) {
+                                        Text(text = "µg/m³", color = Color.White.copy(0.9f), fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                                        Text(text = "PM2.5", color = Color.White.copy(0.7f), fontSize = 10.sp, fontWeight = FontWeight.Medium)
+                                    }
+                                }
+                            }
+                        }
+
+                        Surface(
+                            shape = RoundedCornerShape(16.dp),
+                            color = Color.White.copy(0.18f),
+                            border = BorderStroke(1.dp, Color.White.copy(0.35f)),
+                            modifier = Modifier.weight(1.2f)
+                        ) {
+                            Column(
+                                modifier = Modifier.padding(12.dp),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
                                 Text(
-                                    text = "µg/m³",
-                                    color = Color.White.copy(0.9f),
-                                    fontSize = 15.sp,
+                                    text = risk.message,
+                                    color = Color.White,
+                                    fontSize = 11.sp,
+                                    lineHeight = 15.sp,
                                     fontWeight = FontWeight.Bold
                                 )
                                 Text(
-                                    text = "PM2.5 (Toca para simular)",
-                                    color = Color.White.copy(0.7f),
-                                    fontSize = 11.sp,
+                                    text = recommendation,
+                                    color = Color.White.copy(0.95f),
+                                    fontSize = 10.sp,
+                                    lineHeight = 14.sp,
                                     fontWeight = FontWeight.Medium
                                 )
                             }
                         }
                     }
-                }
-
-                // Tarjeta de Recomendación / Mensaje Combinado Glassmorphism Elite Refinado
-                Surface(
-                    shape = RoundedCornerShape(22.dp),
-                    color = Color.White.copy(0.18f),
-                    border = BorderStroke(1.dp, Color.White.copy(0.35f))
-                ) {
-                    Column(
-                        modifier = Modifier.padding(18.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                } else {
+                    // MODO RETRATO: Diseño vertical tradicional
+                    TextButton(
+                        onClick = {
+                            currentIndex = (currentIndex + 1) % listaPm25.size
+                        },
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        Column(
+                            horizontalAlignment = Alignment.Start,
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            Surface(
-                                shape = CircleShape,
-                                color = Color.White.copy(0.25f),
-                                modifier = Modifier.size(24.dp)
-                            ) {
-                                Box(contentAlignment = Alignment.Center) {
-                                    Icon(
-                                        Icons.Outlined.FitnessCenter,
-                                        contentDescription = null,
-                                        tint = Color.White,
-                                        modifier = Modifier.size(14.dp)
+                            Row(verticalAlignment = Alignment.Bottom) {
+                                Text(
+                                    text = "$activePm25",
+                                    color = Color.White,
+                                    fontSize = 52.sp,
+                                    fontWeight = FontWeight.Black,
+                                    lineHeight = 52.sp
+                                )
+                                Spacer(Modifier.width(10.dp))
+                                Column(modifier = Modifier.padding(bottom = 6.dp)) {
+                                    Text(
+                                        text = "µg/m³",
+                                        color = Color.White.copy(0.9f),
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = "PM2.5",
+                                        color = Color.White.copy(0.7f),
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.Medium
                                     )
                                 }
                             }
+                        }
+                    }
+
+                    Surface(
+                        shape = RoundedCornerShape(22.dp),
+                        color = Color.White.copy(0.18f),
+                        border = BorderStroke(1.dp, Color.White.copy(0.35f))
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(18.dp),
+                            verticalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Surface(
+                                    shape = CircleShape,
+                                    color = Color.White.copy(0.25f),
+                                    modifier = Modifier.size(24.dp)
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Icon(
+                                            Icons.Outlined.FitnessCenter,
+                                            contentDescription = null,
+                                            tint = Color.White,
+                                            modifier = Modifier.size(14.dp)
+                                        )
+                                    }
+                                }
+                                Text(
+                                    text = "ESTADO Y RECOMENDACIÓN",
+                                    color = Color.White,
+                                    fontSize = 11.sp,
+                                    fontWeight = FontWeight.Black,
+                                    letterSpacing = 1.sp
+                                )
+                            }
+
                             Text(
-                                text = "ESTADO Y RECOMENDACIÓN ATLETA PRO",
+                                text = risk.message,
                                 color = Color.White,
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Black,
-                                letterSpacing = 1.sp
+                                fontSize = 13.sp,
+                                lineHeight = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Text(
+                                text = recommendation,
+                                color = Color.White.copy(0.95f),
+                                fontSize = 12.sp,
+                                lineHeight = 18.sp,
+                                fontWeight = FontWeight.Medium
                             )
                         }
-
-                        Text(
-                            text = risk.message,
-                            color = Color.White,
-                            fontSize = 13.sp,
-                            lineHeight = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Text(
-                            text = recommendation,
-                            color = Color.White.copy(0.95f),
-                            fontSize = 12.sp,
-                            lineHeight = 18.sp,
-                            fontWeight = FontWeight.Medium
-                        )
                     }
                 }
             }

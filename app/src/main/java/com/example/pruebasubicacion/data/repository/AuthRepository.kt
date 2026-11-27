@@ -18,6 +18,15 @@ interface AuthRepository {
         fkIdAlergia: Int?,
         fkIdTipoCiudad: Int?
     ): Result<AuthResult?>
+    suspend fun actualizarUsuario(
+        userid: String,
+        nombre: String,
+        apellido: String,
+        tieneAlergia: Boolean,
+        fkIdAlergia: Int?,
+        fkIdTipoCiudad: Int?,
+        correo: String
+    ): Result<Unit>
 
     fun getCurrentUser(): FirebaseUser?
     fun logout()
@@ -73,6 +82,32 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun actualizarUsuario(
+        userid: String,
+        nombre: String,
+        apellido: String,
+        tieneAlergia: Boolean,
+        fkIdAlergia: Int?,
+        fkIdTipoCiudad: Int?,
+        correo: String
+    ): Result<Unit> {
+        return try {
+            connector.upsertUsuario.execute(
+                userid = userid,
+                nombre = nombre,
+                apellido = apellido,
+                tienealergia = tieneAlergia,
+                correo = correo
+            ) {
+                this.fkIdAlergia = fkIdAlergia
+                this.fkIdTipoCiudad = fkIdTipoCiudad
+            }
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     override fun getCurrentUser() = authDataSource.getCurrentUser()
     override fun logout() = authDataSource.logout()
 }
@@ -87,6 +122,7 @@ data class AuthUiState(
     val isLoggedIn: Boolean = false,
     val nombre: String = "",
     val apellido: String = "",
+    val userEmail: String = "",
     val tieneAlergia: Boolean = false,
     val alergia: String = "",
     val tipoCiudad: String = "",
@@ -105,5 +141,6 @@ data class AuthUiState(
         "Ciudad Media (Baja polución)",
         "Gran Ciudad / Metrópoli (Alta polución)",
         "Zona Industrial / Polución crítica"
-    )
+    ),
+    val correo: String? = null
 )
