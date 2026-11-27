@@ -87,6 +87,8 @@ class AuthViewModel(
         apellido: String = "App",
         fkIdAlergia: Int? = null,
         fkIdTipoCiudad: Int? = null,
+        alergiaStr: String = "Ninguna",
+        entornoStr: String = "Urbana",
         onSuccess: () -> Unit = {}
     ) {
         val min = 1
@@ -96,10 +98,11 @@ class AuthViewModel(
         } else {
             false
         }
+        val emailRegistrado = uiState.regEmail
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, errorMessage = null)
             val result = authRepository.registrarUsuario(
-                uiState.regEmail,
+                emailRegistrado,
                 uiState.regPassword,
                 nombre = nombre,
                 apellido = apellido,
@@ -110,7 +113,18 @@ class AuthViewModel(
 
             uiState = if (result.isSuccess) {
                 onSuccess()
-                uiState.copy(isLoading = false, isLoggedIn = true, regEmail = "", regPassword = "")
+                uiState.copy(
+                    isLoading = false,
+                    isLoggedIn = true,
+                    nombre = nombre,
+                    apellido = apellido,
+                    userEmail = emailRegistrado,
+                    tieneAlergia = tieneAlergiaFinal,
+                    alergia = alergiaStr,
+                    tipoCiudad = entornoStr,
+                    regEmail = "",
+                    regPassword = ""
+                )
             } else {
                 uiState.copy(
                     isLoading = false,

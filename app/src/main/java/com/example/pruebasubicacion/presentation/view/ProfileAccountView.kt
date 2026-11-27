@@ -112,12 +112,16 @@ fun ProfileAccountView(
             }
         },
         onRegister = { nombre, apellido, tieneAlergia, fkIdAlergia, fkIdTipoCiudad, onSuccess ->
+            val alergiaStr = viewModel.uiState.listaAlergias.getOrNull((fkIdAlergia ?: 1) - 1) ?: "Ninguna"
+            val entornoStr = viewModel.uiState.listaTiposEntorno.getOrNull((fkIdTipoCiudad ?: 1) - 1) ?: "Urbana"
             viewModel.register(
-                nombre,
-                apellido,
-                fkIdAlergia,
-                fkIdTipoCiudad,
-                onSuccess
+                nombre = nombre,
+                apellido = apellido,
+                fkIdAlergia = fkIdAlergia,
+                fkIdTipoCiudad = fkIdTipoCiudad,
+                alergiaStr = alergiaStr,
+                entornoStr = entornoStr,
+                onSuccess = onSuccess
             )
         },
         onLoginSuccess = onLoginSuccess,
