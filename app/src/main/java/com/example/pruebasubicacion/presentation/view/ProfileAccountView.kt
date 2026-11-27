@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Logout
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Badge
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Person
@@ -72,6 +73,7 @@ fun ProfileAccountView(
     // Si el usuario ya está logueado, usamos los datos que vinieron del ViewModel:
     val perfilActualizado = userProfile.copy(
         nombre = viewModel.uiState.nombre.ifBlank { userProfile.nombre },
+        correo = viewModel.uiState.userEmail.ifBlank { userProfile.correo },
         apellido = viewModel.uiState.apellido.ifBlank { userProfile.apellido },
         tieneAlergia = viewModel.uiState.tieneAlergia,
         alergias = viewModel.uiState.alergia.ifBlank { userProfile.alergias },
@@ -100,7 +102,7 @@ fun ProfileAccountView(
                         isLoggedIn = true,
                         nombre = viewModel.uiState.nombre.ifBlank { "Usuario" },
                         apellido = viewModel.uiState.apellido.ifBlank { "" },
-                        correo = viewModel.uiState.email.ifBlank { userProfile.correo },
+                        correo = viewModel.uiState.userEmail.ifBlank { userProfile.correo },
                         tieneAlergia = viewModel.uiState.tieneAlergia,
                         alergias = viewModel.uiState.alergia.ifBlank { "Ninguna" },
                         tipoCiudad = viewModel.uiState.tipoCiudad.ifBlank { "Urbana" }
@@ -150,6 +152,7 @@ fun ProfileAccountView(
     onClose: () -> Unit
 ) {
     var isRegisterTab by remember { mutableStateOf(false) }
+    val viewModel: AuthViewModel = viewModel()
 
     Card(
         Modifier
@@ -260,6 +263,14 @@ fun ProfileAccountView(
 
             if (userProfile.isLoggedIn) {
                 // --- VISTA PERFIL LOGUEADO ---
+                var isEditing by remember { mutableStateOf(false) }
+                var editNombre by remember(userProfile) { mutableStateOf(userProfile.nombre) }
+                var editApellido by remember(userProfile) { mutableStateOf(userProfile.apellido) }
+                val defaultAlergia = listaAlergias.firstOrNull() ?: "Ninguna / Sin alergias"
+                val defaultEntorno = listaTiposEntorno.firstOrNull() ?: "Urbana"
+                var editAlergias by remember(userProfile) { mutableStateOf(userProfile.alergias.ifBlank { defaultAlergia }) }
+                var editTipoCiudad by remember(userProfile) { mutableStateOf(userProfile.tipoCiudad.ifBlank { defaultEntorno }) }
+
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
@@ -271,7 +282,7 @@ fun ProfileAccountView(
                     ) {
                         Box(contentAlignment = Alignment.Center) {
                             Text(
-                                text = "${userProfile.nombre.take(1)}${userProfile.apellido.take(1)}",
+                                text = "${editNombre.take(1).ifBlank { "U" }}${editApellido.take(1).ifBlank { "U" }}",
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Black,
                                 color = theme.accentBrand
@@ -281,64 +292,166 @@ fun ProfileAccountView(
 
                     Spacer(Modifier.height(12.dp))
 
-                    Text(
-                        text = "${userProfile.nombre} ${userProfile.apellido}",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = theme.textPrimary
-                    )
-                    Text(
-                        text = userProfile.correo,
-                        fontSize = 13.sp,
-                        color = theme.textMuted
-                    )
-
-                    Spacer(Modifier.height(18.dp))
-
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(10.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        ProfileDetailRow("Nombre", userProfile.nombre, Icons.Outlined.Badge, theme)
-                        ProfileDetailRow(
-                            "Apellido",
-                            userProfile.apellido,
-                            Icons.Outlined.Badge,
-                            theme
+                    if (!isEditing) {
+                        Text(
+                            text = "${userProfile.nombre} ${userProfile.apellido}",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = theme.textPrimary
                         )
-                        ProfileDetailRow("Correo", userProfile.correo, Icons.Outlined.Email, theme)
-                        ProfileDetailRow(
-                            "Alergias / Polen",
-                            userProfile.alergias,
-                            Icons.Outlined.Shield,
-                            theme
+                        Text(
+                            text = userProfile.correo,
+                            fontSize = 13.sp,
+                            color = theme.textMuted
                         )
-                        ProfileDetailRow(
-                            "Tipo de Entorno",
-                            userProfile.tipoCiudad,
-                            Icons.Outlined.Place,
-                            theme
-                        )
-                    }
+                        Log("PruebaCorreo", userProfile.correo)
 
-                    Spacer(Modifier.height(20.dp))
+                        Spacer(Modifier.height(18.dp))
 
-                    OutlinedButton(
-                        onClick = onLogout,
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFEF4444)),
-                        border = BorderStroke(1.dp, Color(0xFFEF4444).copy(0.5f)),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
-                        shape = RoundedCornerShape(16.dp)
-                    ) {
-                        Icon(
-                            Icons.AutoMirrored.Outlined.Logout,
-                            contentDescription = null,
-                            modifier = Modifier.size(18.dp)
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(10.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            ProfileDetailRow("Nombre", userProfile.nombre, Icons.Outlined.Badge, theme)
+                            ProfileDetailRow("Apellido", userProfile.apellido, Icons.Outlined.Badge, theme)
+                            ProfileDetailRow("Correo", userProfile.correo, Icons.Outlined.Email, theme)
+                            ProfileDetailRow("Alergias / Polen", userProfile.alergias, Icons.Outlined.Shield, theme)
+                            ProfileDetailRow("Tipo de Entorno", userProfile.tipoCiudad, Icons.Outlined.Place, theme)
+                        }
+
+                        Spacer(Modifier.height(20.dp))
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            OutlinedButton(
+                                onClick = { isEditing = true },
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = theme.accentBrand),
+                                border = BorderStroke(1.dp, theme.accentBrand.copy(0.5f)),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(50.dp),
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                Icon(Icons.Outlined.Edit, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Spacer(Modifier.width(6.dp))
+                                Text("Editar", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            }
+
+                            OutlinedButton(
+                                onClick = onLogout,
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFFEF4444)),
+                                border = BorderStroke(1.dp, Color(0xFFEF4444).copy(0.5f)),
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(50.dp),
+                                shape = RoundedCornerShape(16.dp)
+                            ) {
+                                Icon(Icons.AutoMirrored.Outlined.Logout, contentDescription = null, modifier = Modifier.size(18.dp))
+                                Spacer(Modifier.width(6.dp))
+                                Text("Salir", fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                            }
+                        }
+                    } else {
+                        val textColors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = theme.accentBrand,
+                            unfocusedBorderColor = theme.borderCard,
+                            focusedLabelColor = theme.accentBrand,
+                            focusedContainerColor = theme.bgSubtle,
+                            unfocusedContainerColor = theme.bgSubtle,
+                            focusedTextColor = theme.textPrimary,
+                            unfocusedTextColor = theme.textPrimary
                         )
-                        Spacer(Modifier.width(8.dp))
-                        Text("Cerrar Sesión", fontWeight = FontWeight.Bold, fontSize = 15.sp)
+
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(14.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            OutlinedTextField(
+                                value = editNombre,
+                                onValueChange = { editNombre = it },
+                                label = { Text("Nombre") },
+                                singleLine = true,
+                                colors = textColors,
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(16.dp)
+                            )
+
+                            OutlinedTextField(
+                                value = editApellido,
+                                onValueChange = { editApellido = it },
+                                label = { Text("Apellido") },
+                                singleLine = true,
+                                colors = textColors,
+                                modifier = Modifier.fillMaxWidth(),
+                                shape = RoundedCornerShape(16.dp)
+                            )
+
+                            AeroTrackDropdown(
+                                label = "Alergia / Polinizante (Aire libre)",
+                                selectedValue = editAlergias,
+                                options = listaAlergias,
+                                onItemSelected = { editAlergias = it },
+                                theme = theme
+                            )
+
+                            AeroTrackDropdown(
+                                label = "Tipo de Entorno Urbano / Rural",
+                                selectedValue = editTipoCiudad,
+                                options = listaTiposEntorno,
+                                onItemSelected = { editTipoCiudad = it },
+                                theme = theme
+                            )
+
+                            Spacer(Modifier.height(4.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                            ) {
+                                OutlinedButton(
+                                    onClick = { isEditing = false },
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(50.dp),
+                                    shape = RoundedCornerShape(16.dp)
+                                ) {
+                                    Text("Cancelar", fontWeight = FontWeight.Bold)
+                                }
+
+                                Button(
+                                    onClick = {
+                                        viewModel.actualizarPerfil(
+                                            nombre = editNombre.ifBlank { "Usuario" },
+                                            apellido = editApellido.ifBlank { "" },
+                                            alergiaStr = editAlergias,
+                                            entornoStr = editTipoCiudad,
+                                            listaAlergias = listaAlergias,
+                                            listaEntornos = listaTiposEntorno,
+                                            onSuccess = {
+                                                val updated = userProfile.copy(
+                                                    nombre = editNombre.ifBlank { "Usuario" },
+                                                    apellido = editApellido.ifBlank { "" },
+                                                    tieneAlergia = editAlergias != "Sin Alergias / Ninguna",
+                                                    alergias = editAlergias,
+                                                    tipoCiudad = editTipoCiudad
+                                                )
+                                                onLoginSuccess(updated)
+                                                isEditing = false
+                                            }
+                                        )
+                                    },
+                                    colors = ButtonDefaults.buttonColors(containerColor = theme.accentBrand),
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(50.dp),
+                                    shape = RoundedCornerShape(16.dp)
+                                ) {
+                                    Text("Guardar", fontWeight = FontWeight.Bold, color = Color.White)
+                                }
+                            }
+                        }
                     }
                 }
             } else {
@@ -635,7 +748,7 @@ fun ProfileAccountView(
 fun ProfileAccountViewPreview() {
     val theme = getAdaptiveThemeColors(isDark = true)
     var userProfile by remember { mutableStateOf(UserProfileData()) }
-    var showProfile by remember { mutableStateOf(false) }
+    var showProfile by remember { mutableStateOf(true) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var regEmail by remember { mutableStateOf("") }
@@ -666,8 +779,8 @@ fun ProfileAccountViewPreview() {
             userProfile = updatedProfile.copy(isLoggedIn = true)
         },
         onLogout = {
-            userProfile = userProfile.copy(isLoggedIn = false)
+            userProfile = userProfile.copy(isLoggedIn = true)
         },
-        onClose = { showProfile = false }
+        onClose = { showProfile = true }
     )
 }

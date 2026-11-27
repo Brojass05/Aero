@@ -36,7 +36,8 @@ data class UsuarioPerfil(
     val apellido: String,
     val tieneAlergia: Boolean,
     val alergia: String?,
-    val tipoEntorno: String?
+    val tipoEntorno: String?,
+    val correo: String?
 )
 
 suspend fun fetchUsarioPorId(uid: String): UsuarioPerfil? {
@@ -57,7 +58,8 @@ suspend fun fetchUsarioPorId(uid: String): UsuarioPerfil? {
                 tieneAlergia = usuario.tienealergia,
                 alergia = if (usuario.tienealergia) (usuario.alergia?.nombrealergia
                     ?: "Ninguna") else "Ninguna",
-                tipoEntorno = usuario.tipoEntorno?.descripcion ?: "Urbana"
+                tipoEntorno = usuario.tipoEntorno?.descripcion ?: "Urbana",
+                correo = usuario.correo
             )
         } else {
             android.util.Log.w("FetchUsuario", "Usuario con uid $uid no encontrado en Data Connect")
@@ -111,7 +113,8 @@ suspend fun fetchFullUsarioPorId(uid: String): UsuarioPerfil? {
                 apellido = usuario.apellido,
                 tieneAlergia = usuario.tienealergia,
                 alergia = alergiaStr,
-                tipoEntorno = entornoStr
+                tipoEntorno = entornoStr,
+                correo = usuario.correo
             )
         } else {
             android.util.Log.w("FetchUsuario", "Usuario con uid $uid no encontrado en Data Connect")

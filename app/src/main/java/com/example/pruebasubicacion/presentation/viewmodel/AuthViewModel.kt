@@ -31,12 +31,14 @@ class AuthViewModel(
                 val currentUser = authRepository.getCurrentUser()
                 if (currentUser != null) {
                     val uid = currentUser.uid
+                    val emailAuth = currentUser.email ?: ""
                     val usuario = fetchUsarioPorId(uid)
                     if (usuario != null) {
                         uiState = uiState.copy(
                             isLoggedIn = true,
                             nombre = usuario.nombre,
                             apellido = usuario.apellido,
+                            userEmail = emailAuth.ifBlank { usuario.correo ?: "" },
                             tieneAlergia = usuario.tieneAlergia,
                             alergia = usuario.alergia ?: "Ninguna",
                             tipoCiudad = usuario.tipoEntorno ?: "Urbana"
@@ -121,10 +123,13 @@ class AuthViewModel(
     fun login(onSuccess: () -> Unit = {}) {
         viewModelScope.launch {
             uiState = uiState.copy(isLoading = true, errorMessage = null)
-            val result = authRepository.iniciarSesion(uiState.email, uiState.password)
+            val typedEmail = uiState.email
+            val result = authRepository.iniciarSesion(typedEmail, uiState.password)
 
             if (result.isSuccess) {
-                val uid = authRepository.getCurrentUser()?.uid
+                val currentUser = authRepository.getCurrentUser()
+                val emailAuth = currentUser?.email ?: typedEmail
+                val uid = currentUser?.uid
 
                 if (uid != null) {
                     val usuario = fetchUsarioPorId(uid)
@@ -132,6 +137,7 @@ class AuthViewModel(
                         uiState = uiState.copy(
                             nombre = usuario.nombre,
                             apellido = usuario.apellido,
+                            userEmail = emailAuth,
                             tieneAlergia = usuario.tieneAlergia,
                             alergia = usuario.alergia ?: "Ninguna",
                             tipoCiudad = usuario.tipoEntorno ?: "Urbana"
@@ -181,12 +187,57 @@ class AuthViewModel(
     fun logout() {
         authRepository.logout()
         uiState = AuthUiState(
-            email = "",
-            password = "",
-            regEmail = "",
-            regPassword = "",
             listaAlergias = uiState.listaAlergias,
-            listaTiposEntorno = uiState.listaTiposEntorno
+            listaTiposEntorno = uiState.listaTiposEntorno,
         )
+    }
+
+    fun actualizarPerfil(
+        nombre: String,
+        apellido: String,
+        alergiaStr: String,
+        entornoStr: String,
+        listaAlergias: List<String>,
+        listaEntornos: List<String>,
+        onSuccess: () -> Unit
+    ) {
+        val currentUser = authRepository.getCurrentUser()
+        val uid = currentUser?.uid ?: return
+        val email = currentUser.email ?: uiState.userEmail
+
+        val fkIdAlergia = listaAlergias.indexOf(alergiaStr).let { if (it >= 0) it + 1 else null }
+        val fkIdTipoCiudad = listaEntornos.indexOf(entornoStr).let { if (it >= 0) it + 1 else null }
+        val tieneAlergia = fkIdAlergia != null && fkIdAlergia in 1..6
+
+        viewModelScope.launch {
+            uiState = uiState.copy(isLoading = true, errorMessage = null)
+            val result = authRepository.actualizarUsuario(
+                userid = uid,
+                nombre = nombre,
+                apellido = apellido,
+                tieneAlergia = tieneAlergia,
+                fkIdAlergia = fkIdAlergia,
+                fkIdTipoCiudad = fkIdTipoCiudad,
+                correo = email
+            )
+
+            if (result.isSuccess) {
+                uiState = uiState.copy(
+                    isLoading = false,
+                    nombre = nombre,
+                    apellido = apellido,
+                    userEmail = email,
+                    tieneAlergia = tieneAlergia,
+                    alergia = alergiaStr,
+                    tipoCiudad = entornoStr
+                )
+                onSuccess()
+            } else {
+                uiState = uiState.copy(
+                    isLoading = false,
+                    errorMessage = "Error al actualizar perfil en la base de datos."
+                )
+            }
+        }
     }
 }
